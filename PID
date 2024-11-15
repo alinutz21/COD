@@ -1,0 +1,687 @@
+/*
+ * Copyright (c) 2024 Titan Robotics Club (http://www.titanrobotics.com)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+Title: Example PIDF Controlled Arm and Slide subsystems that can be used in both FTC Autonomous and TeleOp OpModes
+Version: 1.0
+Author: Titan Robotics Club (FTC 3543)
+Acknowledgement: The PIDF tuning code is a modified version of the code provided by KookyBot's video
+                 (https://www.youtube.com/watch?v=E6H6Nqe6qJo)
+
+There are many questions on the forums on how to PIDF controlled subsystems such as an Arm or Slide/Elevator. More
+importantly, how to do this in both Autonomous and TeleOp. The purpose of this document is to provide an example
+on the implementation of such subsystems. Since many teams are using FTCLib, there is an attempt to explain how
+they can be worked into Command-Based code. However, since we don't use FTCLib, we don't pretend we know every
+aspect of FTCLib. As a result, the Auto OpMode example is showing a Finite State Machine implementation. There is
+no reason why this code will not work with Command-Based code. If you are familiar with FTCLib and can provide an
+example on how to make this example implementation using Command-Based in FTCLib, let us know and we will add your
+example to the document.
+
+There are five Java classes in this document. You need to separate them out to their corresponding .java files.
+
+The first file (PIDF_Arm.java) is based on KookyBotz's "PIDF Loops & Arm Control" video
+(https://www.youtube.com/watch?v=E6H6Nqe6qJo) but have two issues fixed:
+
+1. Their gravity compensation code has an assumption that the arm is at zero degree when horizontal. But the most
+   common scenario is that the robot's arm probably has a resting position below horizontal position. When the robot
+   is first powered up, the arm is at resting position and its encoder will be reset at this position (i.e. the
+   resting position is the zero position, not at horizontal). Therefore, the code must be adjusted with a ZERO_OFFSET
+   when calculating gravity compensation.
+2. Their gravity compensation is calculated for the target position of the arm. It should be calculated for the
+   current position of the arm so that gravity compensation is valid throughout the entire arm movement, not just at
+   the target position.
+
+With the modified code below, you can follow KookyBotz's video to tune P, I, D, F and plug these numbers to the Arm
+class code. The tuning procedures for the slide should be similar.
+
+To determine ZERO_OFFSET, put the arm at its resting position (the arm position the robot will be powered up at), use
+a level tool app on your phone (if you don't have one, find one in your app store and download it) and put your phone
+against the arm to measure its angle from VERTICAL (IMPORTANT: vertical down is zero degree).
+
+For a slide, ZERO_OFFSET is generally zero unless you want to account for the slide offset from a fixed point
+(e.g. ground).
+
+/**
+ * PIDF_Arm.java: Based on KookyBotz's PIDF Loops & Arm Control video (only show the relevant corrected method).
+ */
+...
+private final double ZERO_OFFSET = <measured value>;
+...
+public void loop()
+{
+    controller.setPID(p, i, d);
+    int armPos = arm_motor.getCurrentPosition();
+    double pid = controller.calculate(armPos, target);
+    double ff = Math.sin(Math.toRadians(armPos / ticks_in_degrees + ZERO_OFFSET)) * f;
+
+    double power = pid + ff;
+
+    arm_motor.setPower(power);
+
+    telemetry.addData("pos ", armPos);
+    telemetry.addData("target ", target);
+    telemetry.update();
+}
+
+The second file (Arm.java) implements a PIDF Controlled Arm subsystem.
+
+The third file (Slide.java) implements a PIDF Controlled Two-motor Slide subsystem that has the two sides mechanically
+tied together.
+
+The fourth file (Autonomous.java) shows an Autonomous example on how to use the PIDF Controlled Arm and Slide
+subsystems in an autonomous OpMode.
+
+The fifth file (TeleOp.java) shows a TeleOp example on how to use the PIDF Controlled Arm and Slide subsystems in a
+TeleOp OpMode.
+
+/* =============================================================================================================== */
+
+/**
+ * Arm.java: PIDF Controlled Arm subsystem.
+ *
+ * This implements a PIDF Controlled Arm subsystem. It provides control of an arm in either Autonomous or TeleOp
+ * OpMode. The core code of controlling the arm is in the armUpdate method. This method needs to be called periodically
+ * so that it can use the PIDF controller to control and maintain the arm position. It provides the setPosition
+ * method to set the arm's target position with a power limit that determines the max speed of the arm movement. The
+ * control supports gravity compensation where it will apply appropriate power to hold the arm against gravity making
+ * it gravity neutral (i.e. the arm will hold its position at any angle). It also provide the isOnTarget method for
+ * autonomous code to determine if the arm has reached its target position so that it can perform the next operation.
+ * The setPower method allows TeleOp code to use the joystick of a game controller to control the arm going up and
+ * down with variable speed. Unlike other arm control implementations where they operate in the units of encoder
+ * ticks, this implementation uses real world units of arm angle in degrees. Therefore, instead of calling setPosition
+ * to move the arm to position 3225 encoder ticks, we call setPosition to move the arm to 75 degrees from its zero
+ * position which is vertical down (90-degree being horizontal). It is much more intuitive to call setPosition(75) to
+ * set arm position to 75 degree since this code will translate the real world degrees back to encoder ticks when
+ * performing the control.
+ */
+
+public class Arm
+{
+    // Arm characterization constants.
+
+    // KP specifies the Proportional PID coefficient in PIDF.
+    private static final double KP = <tuned p value here>;
+
+    // KI specifies the Integral PID coefficient in PIDF.
+    private static final double KI = <tuned i value here>;
+
+    // KD specifies the Derivative PID coefficient in PIDF.
+    private static final double KD = <tuned d value here>;
+
+    // KF specifies the arm holding power when the arm is at 90-degree (horizontal).
+    private static final double KF = <tuned f value here>;
+
+    // ZERO_OFFSET specifies the arm angle in degrees from vertical when it is at resting position.
+    private static final double ZERO_OFFSET = <measured value here>;
+
+    // MIN_POS specifies the arm angle in degrees at its minimum position (usually the same as ZERO_OFFSET).
+    private static final double MIN_POS = ZERO_OFFSET;
+
+    // MAX_POS specifies the arm angle in degrees at its maximum position.
+    private static final double MAX_POS = <measured value here>;
+
+    // TICKS_PER_DEGREE specifies the scaling factor to translate arm angle in degrees to encoder ticks.
+    private static final double ENCODER_CPR = <from motor encoder spec>;
+    private static final double GEAR_RATIO = <external gear ratio>;	// don't include motor internal gear ratio
+    private static final double TICKS_PER_DEGREE = ENCODER_CPR * GEAR_RATIO / 360.0;
+
+    // Arm subsystem components.
+    private final DcMotorEx armMotor;
+    private final PIDController pidController;
+
+    // Arm states.
+    private double targetPosInDegrees;
+    private double revPowerLimit, fwdPowerLimit;
+
+    /**
+     * Constructor: create and initialize everything required by the arm subsystem including the arm motor and
+     * PID controller.
+     *
+     * @param hardwareMap specifies the hardwareMap to get access to the motor object.
+     * @param motorName specifies the motor's hardware name.
+     * @param motorInverted specifies true to invert the motor direction, false otherwise.
+     * @param brakeEnabled specifies true to set motor brake mode, false to set coast mode.
+     */
+    public Arm(HardwareMap hardwareMap, String motorName, boolean motorInverted, boolean brakeEnabled)
+    {
+        // Create arm motor and initialize it.
+        armMotor = hardwareMap.get(DcMotorEx.class, motorName);
+        armMotor.setDirection(motorInverted ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
+        armMotor.setZeroPowerBehavior(
+            brakeEnabled ? DcMotor.ZeroPowerBehavior.BRAKE : DcMotor.ZeroPowerBehavior.FLOAT);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // You may want to use RUN_USING_ENCODER if you want to do velocity control instead of OpenLoop.
+        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        // Create PID controller for the arm and initialize it with proper PID coefficients.
+        pidController = new PIDController(KP, KI, KD);
+
+        this.targetPosInDegrees = ZERO_OFFSET;
+        this.revPowerLimit = -1.0;
+        this.fwdPowerLimit = 1.0;
+    }
+
+    /**
+     * This method must be called periodically so that it will do PID control of the arm towards set target position
+     * and hold it. Note: this is the equivalent of the .update() method in Command-Based (e.g. FTCLib).
+     */
+    public void armUpdate()
+    {
+        // targetPosInDegrees, revPowerLimit and fwdPowerLimit are set by the setPosition method.
+        double targetPosInTicks = (targetPosInDegrees - ZERO_OFFSET) * TICKS_PER_DEGREE;
+        double currPosInTicks = armMotor.getCurrentPosition();
+        double pidOutput = pidController.calculate(currPosInTicks, targetPosInTicks);
+        // Calculate gravity compensation (assuming arm at horizontal position is 90-degree).
+        double gravityComp = KF * Math.sin(Math.toRadians(ticksToRealWorldDegrees(currPosInTicks));
+        double power = pidOutput + gravityComp;
+        // Clip power to the range of revPowerLimit and fwdPowerLimit.
+        // For an arm, revPowerLimit and fwdPowerLimit should be symmetrical (in the range of -powerLimit and +powerLimit).
+        power = Range.clip(power, revPowerLimit, fwdPowerLimit);
+        armMotor.setPower(power);
+    }
+
+    /**
+     * This method is typically called by autonomous to determine when the arm has reached target so that it can move
+     * on to perform the next operation.
+     *
+     * @param toleranceInDegrees specifies the tolerance in degrees within which we will consider reaching target.
+     * @return true if arm is on target within tolerance, false otherwise.
+     */
+    public boolean isOnTarget(double toleranceInDegrees)
+    {
+        double currPosInDegrees = getPosition();
+        return Math.abs(targetPosInDegrees - currPosInDegrees) <= toleranceInDegrees;
+    }
+
+    /**
+     * This method can be called by autonomous or teleop to set the arm target. Typically, in TeleOp, one can react to
+     * a button press and call this method to move the arm to a preset position.
+     *
+     * @param targetPosInDegrees specifies the target position in degrees.
+     * @param powerLimit specifies the maximum power for the arm movement.
+     */
+    public void setPosition(double targetPosInDegrees, double powerLimit)
+    {
+        this.targetPosInDegrees = targetPosInDegrees;
+        powerLimit = Math.abs(powerLimit);
+        this.revPowerLimit = -powerLimit;
+        this.fwdPowerLimit = powerLimit;
+    }
+
+    /**
+     * This method is typically used by TeleOp to control the arm movement by the value of the joystick so that the
+     * speed of the arm movement can be controlled by the joystick. Since this is PID controlled, the arm will slow
+     * down when approaching the min or max limits even though the joystick is pushed to max position.
+     *
+     * @param power specifies the maximum power for the arm movement.
+     */
+    public void setPower(double power)
+    {
+        if (power > 0.0)
+        {
+            // Move arm towards max position with specified power.
+            setPosition(MAX_POS, power);
+        }
+        else if (power < 0.0)
+        {
+            // Move arm towards min position with specified power.
+            setPosition(MIN_POS, power);
+        }
+        else
+        {
+            // Hold arm position without power limit.
+            setPosition(getPosition(), 1.0);
+        }
+    }
+
+    /**
+     * This method translates encoder ticks to real world arm position in degrees.
+     *
+     * @param encoderTicks specifies the motor encoder ticks.
+     * @return translated arm position in degrees.
+     */
+    public double ticksToRealWorldDegrees(double encoderTicks)
+    {
+        return encoderTicks / TICKS_PER_DEGREE + ZERO_OFFSET;
+    }
+
+    /**
+     * This method returns the arm position in real world degrees.
+     *
+     * @return arm position in degrees.
+     */
+    public double getPosition()
+    {
+        return ticksToRealWorldDegrees(armMotor.getCurrentPosition());
+    }
+}
+
+/* =============================================================================================================== */
+
+/**
+ * Slide.java: PIDF Controlled Slide subsystem.
+ *
+ * This implements a PIDF Controlled Slide subsystem. It provides control of a slide in either Autonomous or TeleOp
+ * OpMode. The core code of controlling the slide is in the slideUpdate method. This method needs to be called
+ * periodically so that it can use the PIDF controller to control and maintain the slide position. It provides the
+ * setPosition method to set the slide's target position with a power limit that determines the max speed of the slide
+ * movement. The control supports gravity compensation where it will apply appropriate power to hold the slide against
+ * gravity making it gravity neutral (i.e. the slide will hold its position at any height). It also provide the
+ * isOnTarget method for autonomous code to determine if the slide has reached its target position so that it can
+ * perform the next operation. The setPower method allows TeleOp code to use the joystick of a game controller to
+ * control the slide going up and down with variable speed. Unlike other slide control implementations where they
+ * operate in the units of encoder ticks, this implementation uses real world units of extension length in inches.
+ * Therefore, instead of calling setPosition to move the slide to position 3225 encoder ticks, we call setPosition to
+ * move the slide to extend 10 inches from its zero position which is the down position (lowest position). It is much
+ * more intuitive to call setPosition(8) to extend the slide 8 inches since this code will translate the real world
+ * inches back to encoder ticks when performing the control.
+ */
+
+public class Slide
+{
+    // Slide characterization constants.
+
+    // KP specifies the Proportional PID coefficient in PIDF.
+    private static final double KP = <tuned p value here>;
+
+    // KI specifies the Integral PID coefficient in PIDF.
+    private static final double KI = <tuned i value here>;
+
+    // KD specifies the Derivative PID coefficient in PIDF.
+    private static final double KD = <tuned d value here>;
+
+    // KF specifies the slide holding power at any height.
+    private static final double KF = <tuned f value here>;
+
+    // ZERO_OFFSET specifies the slide extension length in inches at resting position (usually 0.0).
+    private static final double ZERO_OFFSET = 0.0;
+
+    // MIN_POS specifies the slide extension length in inches at its minimum position (usually the same as ZERO_OFFSET).
+    private static final double MIN_POS = ZERO_OFFSET;
+
+    // MAX_POS specifies the slide extension length in inches at its maximum position.
+    private static final double MAX_POS = <measured value here>;
+
+    // TICKS_PER_INCH specifies the scaling factor to translate slide extension length in inches to encoder ticks.
+    private static final double TICKS_PER_INCH = <tuned value here>;
+
+    // Slide subsystem components.
+    private final DcMotorEx leftMotor, rightMotor;
+    private final PIDController pidController;
+
+    // Slide states.
+    private double targetPosInInches;
+    private double revPowerLimit, fwdPowerLimit;
+
+    /**
+     * Constructor: create and initialize everything required by the slide subsystem including the slide motors and
+     * PID controller.
+     *
+     * @param hardwareMap specifies the hardwareMap to get access to the motor object.
+     * @param leftMotorName specifies the left motor's hardware name.
+     * @param rightMotorName specifies the right motor's hardware name.
+     * @param leftMotorInverted specifies true to invert the left motor direction, false otherwise.
+     * @param rightMotorInverted specifies true to invert the right motor direction, false otherwise.
+     * @param brakeEnabled specifies true to set motor brake mode, false to set coast mode.
+     */
+    public Slide(
+        HardwareMap hardwareMap, String leftMotorName, String rightMotorName, boolean leftMotorInverted,
+        boolean rightMotorInverted, boolean brakeEnabled)
+    {
+        // Create slide motors and initialize it.
+        leftMotor = hardwareMap.get(DcMotorEx.class, leftMotorName);
+        leftMotor.setDirection(leftMotorInverted ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
+        leftMotor.setZeroPowerBehavior(
+            brakeEnabled ? DcMotor.ZeroPowerBehavior.BRAKE : DcMotor.ZeroPowerBehavior.FLOAT);
+        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // You may want to use RUN_USING_ENCODER if you want to do velocity control instead of OpenLoop.
+        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        rightMotor = hardwareMap.get(DcMotorEx.class, rightMotorName);
+        rightMotor.setDirection(rightMotorInverted ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
+        rightMotor.setZeroPowerBehavior(
+            brakeEnabled ? DcMotor.ZeroPowerBehavior.BRAKE : DcMotor.ZeroPowerBehavior.FLOAT);
+        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // You may want to use RUN_USING_ENCODER if you want to do velocity control instead of OpenLoop.
+        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        // Create PID controller for the slide and initialize it with proper PID coefficients.
+        pidController = new PIDController(KP, KI, KD);
+
+        this.targetPosInInches = ZERO_OFFSET;
+        this.revPowerLimit = -1.0;
+        this.fwdPowerLimit = 1.0;
+    }
+
+    /**
+     * This method must be called periodically so that it will do PID control of the slide towards set target position
+     * and hold it. Note: this is the equivalent of the .update() method in Command-Based (e.g. FTCLib).
+     */
+    public void slideUpdate()
+    {
+        // targetPosInInches, revPowerLimit and fwdPowerLimit are set by the setPosition method.
+        double targetPosInTicks = (targetPosInInches - ZERO_OFFSET) * TICKS_PER_INCH;
+        // Only need to read the position of one side of the slide assuming both sides are mechanically tied.
+        double currPosInTicks = leftMotor.getCurrentPosition();
+        double pidOutput = pidController.calculate(currPosInTicks, targetPosInTicks);
+        // Gravity compensation should be a constant for a slide.
+        double power = pidOutput + KF;
+        // Clip power to the range of revPowerLimit and fwdPowerLimit.
+        // For a slide/elevator, revPowerLimit and fwdPowerLimit can be asymmetric (i.e. revPowerLimit and
+        // fwdPowerLimit have different magnitudes. For example, stronger power going up than down.
+        power = Range.clip(power, revPowerLimit, fwdPowerLimit);
+        leftMotor.setPower(power);
+        rightMotor.setPower(power);
+    }
+
+    /**
+     * This method is typically called by autonomous to determine when the slide has reached target so that it can
+     * move on to perform the next operation.
+     *
+     * @param toleranceInInches specifies the tolerance in inches within which we will consider reaching target.
+     * @return true if slide is on target within tolerance, false otherwise.
+     */
+    public boolean isOnTarget(double toleranceInInches)
+    {
+        double currPosInInches = getPosition();
+        return Math.abs(targetPosInInches - currPosInInches) <= toleranceInInches;
+    }
+
+    /**
+     * This method can be called by autonomous or teleop to set the slide target. Typically, in TeleOp, one can react
+     * to a button press and call this method to move the slide to a preset position.
+     *
+     * @param targetPosInInches specifies the target position in inches.
+     * @param powerLimit specifies the maximum power for the slide movement.
+     */
+    public void setPosition(double targetPosInInches, double powerLimit)
+    {
+        this.targetPosInInches = targetPosInInches;
+        powerLimit = Math.abs(powerLimit);
+        this.revPowerLimit = -powerLimit;
+        this.fwdPowerLimit = powerLimit;
+    }
+
+    /**
+     * This method is typically used by TeleOp to control the slide movement by the value of the joystick so that the
+     * speed of the slide movement can be controlled by the joystick. Since this is PID controlled, the slide will
+     * slow down when approaching the min or max limits even though the joystick is pushed to max position.
+     *
+     * @param power specifies the maximum power for the slide movement.
+     */
+    public void setPower(double power)
+    {
+        if (power > 0.0)
+        {
+            // Move slide towards max position with specified power.
+            setPosition(MAX_POS, power);
+        }
+        else if (power < 0.0)
+        {
+            // Move slide towards min position with specified power.
+            setPosition(MIN_POS, power);
+        }
+        else
+        {
+            // Hold slide position without power limit.
+            setPosition(getPosition(), 1.0);
+        }
+    }
+
+    /**
+     * This method translates encoder ticks to real world slide position in inches.
+     *
+     * @param encoderTicks specifies the motor encoder ticks.
+     * @return translated slide position in inches.
+     */
+    public double ticksToRealWorldInches(double encoderTicks)
+    {
+        return encoderTicks / TICKS_PER_INCH + ZERO_OFFSET;
+    }
+
+    /**
+     * This method returns the slide position in real world inches.
+     *
+     * @return slide position in inches.
+     */
+    public double getPosition()
+    {
+        return ticksToRealWorldInches(leftMotor.getCurrentPosition());
+    }
+}
+
+/* =============================================================================================================== */
+
+/**
+ * Autonomoous.java: Autonomous OpMode.
+ */
+
+@Autonomous(name="ExampleAuto", group="Autonomous")
+public class Autonomous extends LinearOpMode
+{
+    static final String ARM_NAME = "arm_motor";
+    static final boolean ARM_MOTOR_INVERTED = false;
+    static final boolean ARM_BRAKE_ENABLED = true;
+    static final double ARM_HOME_POS = 45.0;
+    static final double ARM_LOADING_POS = 50.0;
+    static final double ARM_SCORING_POS = 270.0;
+
+    Arm arm;
+    Slide slide;
+    DriveBase driveBase;
+    int state = 0;
+
+    enum AutoState
+    {
+        START,
+        MOVE_ARM_TO_SCORE_POS,
+        SCORE_PIXEL,
+        RETRACT_ARM,
+        DONE
+    }
+
+    public void runOpMode()
+    {
+        AutoState state = AutoState.START;
+
+        // Create subsystems and initialize it.
+        arm = new Arm(hardwareMap, ARM_NAME, ARM_MOTOR_INVERTED, ARM_BRAKE_ENABLED);
+        slide = new Slide();
+        driveBase = new DriveBase();
+        ...
+        ...
+        waitForStart();
+
+        while (opModeIsActive())
+        {
+            switch (state)
+            {
+                case START:
+                    ...
+                    ...
+                    break;
+
+                case MOVE_ARM_TO_SCORE_POS:
+                    if (<prev operation is done>)
+                    {
+                        arm.setPosition(ARM_SCORING_POS, 0.5);
+                        state = AutoState.SCORE_PIXEL;
+                    }
+                    break;
+
+                case SCORE_PIXEL:
+                    // waiting for the arm to reach target.
+                    if (arm.isOnTarget(1.0))
+                    {
+                        // do something to score pixel.
+                        ...
+                        state = AutoState.RETRACT_ARM;
+                    }
+                    break;
+
+                case RETRACT_ARM:
+                    if (<scoring pixel is done>)
+                    {
+                        // Retract arm
+                        arm.setPosition(ARM_HOME_POS, 0.5);
+                        state = AutoState.DONE;
+                    }
+                    break;
+
+                case DONE:
+                    // Waiting for the arm to complete retraction.
+                    if (arm.isOnTarget(1.0))
+                    {
+                        // perform next operation.
+                        ...
+                    }
+                    break;
+
+                ...
+                ...
+            }
+            // Call all periodic tasks to make progress.
+            arm.armUpdate();
+            slide.slideUpdate();
+            driveBase.driveUpdate();
+        }
+    }
+}
+
+/* =============================================================================================================== */
+
+/**
+ * TeleOp.java: TeleOp OpMode.
+ */
+
+@TeleOp(name="ExampleTeleOp", group="TeleOp")
+public class TeleOp extends LinearOpMode
+{
+    static final double JOYSTICK_DEADBAND = 0.2;
+    static final String ARM_NAME = "arm_motor";
+    static final boolean ARM_MOTOR_INVERTED = false;
+    static final boolean ARM_BRAKE_ENABLED = true;
+    static final double ARM_HOME_POS = 45.0;
+    static final double ARM_LOADING_POS = 50.0;
+    static final double ARM_SCORING_POS = 270.0;
+
+    Arm arm;
+    Slide slide;
+    DriveBase driveBase;
+
+    boolean prevButtonAState = false;
+    boolean prevButtonBState = false;
+    boolean prevButtonXState = false;
+    boolean prevButtonYState = false;
+
+    public void runOpMode()
+    {
+        // Create subsystems and initialize it.
+        arm = new Arm(hardwareMap, ARM_NAME, ARM_MOTOR_INVERTED, ARM_BRAKE_ENABLED);
+        slide = new Slide(...);
+        driveBase = new DriveBase(...);
+        ...
+        ...
+        waitForStart();
+
+        double prevArmPower = 0.0;
+        double prevSlidePower = 0.0;
+        while (opModeIsActive())
+        {
+            // Arm Control.
+            double armPower = gamepad1.left_stick_y;
+            armPower = Math.abs(armPower) >= JOYSTICK_DEADBAND ? armPower : 0.0;
+            if (armPower != 0.0)
+            {
+                // Joystick action always interrupts and overrides button action.
+                arm.setPower(armPower);
+                prevArmPower = armPower;
+            }
+            else if (prevArmPower != 0.0)
+            {
+                // Operator just let go the joystick. Stop the arm and hold its position.
+                arm.setPower(0.0);
+                prevArmPower = 0.0;
+            }
+            else
+            {
+                // Check button states.
+                boolean buttonAPressed = gamepad1.a;
+                boolean buttonBPressed = gamepad1.b;
+
+                if (!prevButtonAState && buttonAPressed)
+                {
+                    arm.setPosition(ARM_SCORING_POS, 0.5);
+                }
+
+                if (!prevButtonBState && buttonBPressed)
+                {
+                    arm.setPosition(ARM_LOADING_POS, 0.5);
+                }
+
+                prevButtonAState = buttonAPressed;
+                prevButtonBState = buttonBPressed;
+            }
+            arm.armUpdate();
+
+            // Slide Control.
+            double slidePower = gamepad1.right_stick_y;
+            slidePower = Math.abs(slidePower) >= JOYSTICK_DEADBAND ? slidePower : 0.0;
+            if (slidePower != 0.0)
+            {
+                // Joystick action always interrupts and overrides button action.
+                slide.setPower(slidePower);
+                prevSlidePower = slidePower;
+            }
+            else if (prevSlidePower != 0.0)
+            {
+                // Operator just let go the joystick. Stop the slide and hold its position.
+                slide.setPower(0.0);
+                prevSlidePower = 0.0;
+            }
+            else
+            {
+                // Check button states.
+                boolean buttonXPressed = gamepad1.x;
+                boolean buttonYPressed = gamepad1.y;
+
+                if (!prevButtonXState && buttonXPressed)
+                {
+                    slide.setPosition(...);
+                }
+
+                if (!prevButtonYState && buttonYPressed)
+                {
+                    slide.setPosition(...);
+                }
+
+                prevButtonXState = buttonXPressed;
+                prevButtonYState = buttonYPressed;
+            }
+            slide.slideUpdate();
+
+            // Drive Base Control.
+            ...
+            ...
+            driveBase.driveUpdate();
+        }
+    }
+}
