@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.COD.Subsystems.BetterOuttake;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.Hang;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.Intake;
@@ -17,6 +18,7 @@ public class Teleop extends LinearOpMode {
     private Gamepad gp1,gp2;
     private Drivetrain drivetrain;
     private Outake outake;
+    private BetterOuttake outtake;
     private Intake intake;
     private Hang hang;
 
@@ -24,7 +26,7 @@ public class Teleop extends LinearOpMode {
     public void runOpMode(){
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
+        outtake = new BetterOuttake();
         outake = new Outake();
         intake = new Intake();
         drivetrain = new Drivetrain();
@@ -44,6 +46,7 @@ public class Teleop extends LinearOpMode {
             drivetrain.Loop(gp1);
             intake.Loop(gp2);
             outake.Loop(gp2);
+            //   outtake.Loop(gp2);
             hang.Loop(gp1);
         }
     }

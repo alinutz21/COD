@@ -66,12 +66,12 @@ public class BetterOuttake {
             case DUMP:
                 if(liftTimer.seconds() >= DUMP_TIME){
                     liftServo.setPosition(DEPOSIT_IDLE);
-                    slide.setPosition(LIFT_DOWN,0.5);
+                    slide.setPosition(LIFT_DOWN,-0.5);
                     currentState = State.RETRACT;
                 }
                 break;
             case RETRACT:
-                if(slide.isOnTarget(cmToInch(10))){
+                if(slide.isOnTarget(cmToInch(9))){
                     currentState = State.GROUND;
                 }
                 break;

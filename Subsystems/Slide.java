@@ -12,97 +12,101 @@ import com.qualcomm.robotcore.util.Range;
 
 public class Slide
 {
-    // Slide characterization constants.
+    // Constante pentru caracterizarea alunecării (Slide characterization).
 
-    // KP specifies the Proportional PID coefficient in PIDF.
+    // KP specifică coeficientul proporțional al regulatorului PID din PIDF.
+
     private static final double KP = 0;
 
-    // KI specifies the Integral PID coefficient in PIDF.
+    // KI specifică coeficientul integral al regulatorului PID din PIDF.
     private static final double KI = 0;
 
-    // KD specifies the Derivative PID coefficient in PIDF.
+    // KD specifică coeficientul derivativ al regulatorului PID din PIDF.
+
     private static final double KD = 0;
 
-    // KF specifies the slide holding power at any height.
+    // KF specifică puterea de menținere a alunecării la orice înălțime.
+
     private static final double KF = 0;
 
-    // ZERO_OFFSET specifies the slide extension length in inches at resting position (usually 0.0).
+    // ZERO_OFFSET specifică lungimea extensiei alunecării în inci în poziția de repaus (de obicei 0.0).
     private static final double ZERO_OFFSET = 0.0;
 
-    // MIN_POS specifies the slide extension length in inches at its minimum position (usually the same as ZERO_OFFSET).
+    // MIN_POS specifică lungimea extensiei alunecării în inci în poziția sa minimă (de obicei aceeași cu ZERO_OFFSET).
     private static final double MIN_POS = ZERO_OFFSET;
 
-    // MAX_POS specifies the slide extension length in inches at its maximum position.
+    // MAX_POS specifică lungimea extensiei alunecării în inci în poziția sa maximă.
     private static final double MAX_POS = 39.37;
 
-    // TICKS_PER_INCH specifies the scaling factor to translate slide extension length in inches to encoder ticks.
+    // TICKS_PER_INCH specifică factorul de scalare pentru a traduce lungimea extensiei alunecării din inci în tickeți ai encoderului.
     private static final double TICKS_PER_INCH = 537.7;
 
-    // Slide subsystem components.
+    // Componentele sub-sistemului de alunecare.
     private final DcMotorEx leftMotor;
     private final PIDController pidController;
 
-    // Slide states.
+    // Stările alunecării.
     private double targetPosInInches;
     private double revPowerLimit, fwdPowerLimit;
 
     /**
-     * Constructor: create and initialize everything required by the slide subsystem including the slide motors and
-     * PID controller.
+     * Constructor: creează și initializează tot ce este necesar pentru sub-sistemul de alunecare, inclusiv motoarele de alunecare și
+     * regulatorul PID.
      *
-     * @param hardwareMap specifies the hardwareMap to get access to the motor object.
-     * @param leftMotorName specifies the left motor's hardware name.
-     * @param leftMotorInverted specifies true to invert the left motor direction, false otherwise.
-     * @param brakeEnabled specifies true to set motor brake mode, false to set coast mode.
+     * @param hardwareMap specifică hardwareMap pentru a accesa obiectul motorului.
+     * @param leftMotorName specifică numele hardware al motorului stâng.
+     * @param leftMotorInverted specifică true pentru a inversa direcția motorului stâng, false în caz contrar.
+     * @param brakeEnabled specifică true pentru a activa modul de frână al motorului, false pentru a activa modul de coastă.
+
      */
     public Slide(
             HardwareMap hardwareMap, String leftMotorName, boolean leftMotorInverted, boolean brakeEnabled)
     {
-        // Create slide motors and initialize it.
+        // Creează motoarele de alunecare și le initializează.
         leftMotor = hardwareMap.get(DcMotorEx.class, leftMotorName);
         leftMotor.setDirection(leftMotorInverted ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
         leftMotor.setZeroPowerBehavior(
                 brakeEnabled ? DcMotor.ZeroPowerBehavior.BRAKE : DcMotor.ZeroPowerBehavior.FLOAT);
         leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        // You may want to use RUN_USING_ENCODER if you want to do velocity control instead of OpenLoop.
+        // Poate vrei să folosești RUN_USING_ENCODER dacă dorești să faci control al vitezei în loc de OpenLoop.
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
 
-        // Create PID controller for the slide and initialize it with proper PID coefficients.
+        // Creează regulatorul PID pentru alunecare și îl initializează cu coeficientele PID corespunzătoare.
         pidController = new PIDController(KP, KI, KD);
 
         this.targetPosInInches = ZERO_OFFSET;
-        this.revPowerLimit = -1.0;
-        this.fwdPowerLimit = 1.0;
+        this.revPowerLimit = -0.5;
+        this.fwdPowerLimit = 0.7;
     }
 
     /**
-     * This method must be called periodically so that it will do PID control of the slide towards set target position
-     * and hold it. Note: this is the equivalent of the .update() method in Command-Based (e.g. FTCLib).
+     * Această metodă trebuie apelată periodic pentru a face control PID al alunecării către poziția țintă stabilită
+     * și a o menține. Notă: aceasta este echivalentul metodei .update() în Command-Based (de exemplu, FTCLib).
      */
     public void slideUpdate()
     {
-        // targetPosInInches, revPowerLimit and fwdPowerLimit are set by the setPosition method.
+        // targetPosInInches, revPowerLimit și fwdPowerLimit sunt setate de metoda setPosition.
         double targetPosInTicks = (targetPosInInches - ZERO_OFFSET) * TICKS_PER_INCH;
-        // Only need to read the position of one side of the slide assuming both sides are mechanically tied.
+        // Este suficient să citim poziția unei singure părți ale alunecării, presupunând că ambele părți sunt legate mecanic.
         double currPosInTicks = leftMotor.getCurrentPosition();
         double pidOutput = pidController.calculate(currPosInTicks, targetPosInTicks);
-        // Gravity compensation should be a constant for a slide.
+        // Compensarea gravitației ar trebui să fie o constantă pentru o alunecare.
         double power = pidOutput + KF;
-        // Clip power to the range of revPowerLimit and fwdPowerLimit.
-        // For a slide/elevator, revPowerLimit and fwdPowerLimit can be asymmetric (i.e. revPowerLimit and
-        // fwdPowerLimit have different magnitudes. For example, stronger power going up than down.
+        // Limitează puterea la intervalul dintre revPowerLimit și fwdPowerLimit.
+        // Pentru o alunecare/elevatoare, revPowerLimit și fwdPowerLimit pot fi asimetrice (adică revPowerLimit și
+        // fwdPowerLimit au magnitudini diferite. De exemplu, putere mai mare pentru urcare decât pentru coborâre).
         power = Range.clip(power, revPowerLimit, fwdPowerLimit);
         leftMotor.setPower(power);
     }
 
     /**
-     * This method is typically called by autonomous to determine when the slide has reached target so that it can
-     * move on to perform the next operation.
+     * Această metodă este de obicei apelată de autonom pentru a determina când alunecarea a ajuns la țintă, astfel încât să poată
+     * trece la următoarea operațiune.
      *
-     * @param toleranceInInches specifies the tolerance in inches within which we will consider reaching target.
-     * @return true if slide is on target within tolerance, false otherwise.
+     * @param toleranceInInches specifică toleranța în inci în care vom considera că am ajuns la țintă.
+     * @return true dacă alunecarea este pe țintă în limita toleranței, false în caz contrar.
      */
     public boolean isOnTarget(double toleranceInInches)
     {
@@ -111,11 +115,11 @@ public class Slide
     }
 
     /**
-     * This method can be called by autonomous or teleop to set the slide target. Typically, in TeleOp, one can react
-     * to a button press and call this method to move the slide to a preset position.
+     * Această metodă poate fi apelată de autonom sau teleop pentru a seta ținta alunecării. De obicei, în TeleOp, se poate reacționa
+     * la o apăsare de buton și se poate apela această metodă pentru a muta alunecarea într-o poziție prestabilită.
      *
-     * @param targetPosInInches specifies the target position in inches.
-     * @param powerLimit specifies the maximum power for the slide movement.
+     * @param targetPosInInches specifică poziția țintă în inci.
+     * @param powerLimit specifică puterea maximă pentru mișcarea alunecării.
      */
     public void setPosition(double targetPosInInches, double powerLimit)
     {
@@ -126,46 +130,49 @@ public class Slide
     }
 
     /**
-     * This method is typically used by TeleOp to control the slide movement by the value of the joystick so that the
-     * speed of the slide movement can be controlled by the joystick. Since this is PID controlled, the slide will
-     * slow down when approaching the min or max limits even though the joystick is pushed to max position.
+     * Această metodă este de obicei utilizată de TeleOp pentru a controla mișcarea alunecării prin valoarea joystick-ului,
+     * astfel încât viteza mișcării alunecării să poată fi controlată de joystick. Deoarece aceasta este controlată prin PID,
+     * alunecarea va încetini când se apropie de limitele minime sau maxime, chiar dacă joystick-ul este apăsat până la
+     * poziția maximă.
      *
-     * @param power specifies the maximum power for the slide movement.
+     * @param power specifică puterea maximă pentru mișcarea alunecării.
      */
     public void setPowers(double power)
     {
         if (power > 0.0)
         {
-            // Move slide towards max position with specified power.
+            // Mărește alunecarea către poziția maximă cu puterea specificată.
             setPosition(MAX_POS, power);
         }
         else if (power < 0.0)
         {
-            // Move slide towards min position with specified power.
+            // Mărește alunecarea către poziția minimă cu puterea specificată.
+
             setPosition(MIN_POS, power);
         }
         else
         {
-            // Hold slide position without power limit.
+            // Menține poziția alunecării fără limită de putere.
             setPosition(getPosition(), 1.0);
         }
     }
 
     /**
-     * This method translates encoder ticks to real world slide position in inches.
+     * Această metodă traduce ticheții encoderului în poziția reală a alunecării în inci.
      *
-     * @param encoderTicks specifies the motor encoder ticks.
-     * @return translated slide position in inches.
+     * @param encoderTicks specifică ticheții encoderului motorului.
+     * @return poziția tradusă a alunecării în inci.
      */
+
     public double ticksToRealWorldInches(double encoderTicks)
     {
         return encoderTicks / TICKS_PER_INCH + ZERO_OFFSET;
     }
 
     /**
-     * This method returns the slide position in real world inches.
+     * Această metodă returnează poziția alunecării în inci în lumea reală.
      *
-     * @return slide position in inches.
+     * @return poziția alunecării în inci.
      */
     public double getPosition()
     {
