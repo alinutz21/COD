@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.COD.Subsystems.Intake;
 @TeleOp(name="Intake Subsytem", group="Subsisteme")
 public class IntakeTeleop extends LinearOpMode {
     private Gamepad gp2;
-    private Intake intake;
+    private Intake intake = null;
 
     @Override
     public void runOpMode(){

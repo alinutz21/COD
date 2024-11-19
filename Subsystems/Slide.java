@@ -59,8 +59,7 @@ public class Slide
      * @param brakeEnabled specifică true pentru a activa modul de frână al motorului, false pentru a activa modul de coastă.
 
      */
-    public Slide(
-            HardwareMap hardwareMap, String leftMotorName, boolean leftMotorInverted, boolean brakeEnabled)
+    public Slide(HardwareMap hardwareMap, String leftMotorName, boolean leftMotorInverted, boolean brakeEnabled)
     {
         // Creează motoarele de alunecare și le initializează.
         leftMotor = hardwareMap.get(DcMotorEx.class, leftMotorName);

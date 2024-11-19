@@ -4,16 +4,18 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.util.BatteryChecker;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
 
 @Config
 public class Intake {
     public Servo extensionServo;
-    public Servo activeIntakeServo;
+    public CRServo activeIntakeServo;
     public Servo bendOverServo;
     ElapsedTime liftTimer = new ElapsedTime();
-    public ValoriFunctii valori;
+    public ValoriFunctii valori = new ValoriFunctii();
 
     public enum State {
         HOME,
@@ -40,7 +42,7 @@ public class Intake {
         extensionServo = hardwareMap.get(Servo.class,"EXTENSIONSERVO");
         extensionServo.setPosition(EXT_HOME);
 
-        activeIntakeServo = hardwareMap.get(Servo.class,"WHEELSERVO");
+        activeIntakeServo = hardwareMap.get(CRServo.class,"WHEELSERVO");
 
         bendOverServo = hardwareMap.get(Servo.class,"ROTATESERVO");
         bendOverServo.setPosition(DMP_INTAKE_SIDE);
@@ -51,6 +53,7 @@ public class Intake {
 
     public void SetState(State state) { currentState = state;}
     public void Loop(Gamepad gp){
+
         switch (currentState){
             case HOME:
                 if(gp.b){
@@ -63,11 +66,12 @@ public class Intake {
                 if(Math.abs(extensionServo.getPosition()-EXT_EXTENDED)<3) {
                     liftTimer.reset();
                     currentState = State.INTAKE;
-                   // activeIntakeServo.setPosition(1);
+                    activeIntakeServo.setPower(1);
                 }
                 break;
             case INTAKE:
                 if(liftTimer.seconds() >= INTAKE_TIME){
+                    activeIntakeServo.setPower(0);
                     bendOverServo.setPosition(DMP_INTAKE_SIDE);
                     extensionServo.setPosition(EXT_HOME);
                     currentState = State.RETRACT;
@@ -83,6 +87,7 @@ public class Intake {
         }
         if(gp.a && currentState != State.HOME){
             currentState = State.HOME;
+            // TODO: Scrie codul pentru intoarcerea bratului inapoi la pozitia initiala
         }
     }
 

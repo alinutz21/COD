@@ -26,8 +26,8 @@ public class Hang {
             power = 1;
         }
         else if(gp.dpad_down){
-            power = 0;
-        }
+            power = -1;
+        }else power = 0;
         hang1Motor.setPower(power);
         hang2Motor.setPower(power);
     }

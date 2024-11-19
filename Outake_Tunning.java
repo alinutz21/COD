@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.arcrobotics.ftclib.controller.PIDController;
 
-@TeleOp(name = "Intake Tunning",group = "Tunning")
-public class Intake_Tunning extends LinearOpMode {
+@TeleOp(name = "Outtake Tunning",group = "Tunning")
+public class Outake_Tunning extends LinearOpMode {
     private PIDController controller;
     public static double p = 0,i = 0,d = 0;
     public static int target = 0;

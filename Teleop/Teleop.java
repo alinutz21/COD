@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.COD.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.Outake;
 
 @TeleOp(name="TeleOP", group="Linear OpMode")
-
 public class Teleop extends LinearOpMode {
     private Gamepad gp1,gp2;
     private Drivetrain drivetrain;
@@ -44,8 +43,8 @@ public class Teleop extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             drivetrain.Loop(gp1);
-            intake.Loop(gp2);
-            outake.Loop(gp2);
+            intake.Loop(gp2); // TODO: TESTEAZA PENTRU DRIVER 1
+            outake.Loop(gp2); // TODO: TESTEAZA PENTRU DRIVER 1
             //   outtake.Loop(gp2);
             hang.Loop(gp1);
         }

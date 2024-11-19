@@ -7,12 +7,12 @@ public class ValoriFunctii {
      *   VALORILE PENTRU SERVO-UL CARE DEPOZITEAZA
      */
     public final double EXT_HOME = 0.73; // pozitia lui normala
-    public final double EXT_EXTENDED = 1; // pozitia lui cand arunca piesa
+    public final double EXT_EXTENDED = 1; // pozitia lui cand este extins
     public final double DMP_INTAKE_SIDE = 0.3;
     public final double DMP_SCORING_SIDE = 0.7;
 
     // TIMPUL ALOCAT PENTRU CA SERVO-UL SA PUNA PIESA IN COS
-    public final double INTAKE_TIME = 2;
+    public final double INTAKE_TIME = 4;
 
     /// OUTAKE
 
