@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.COD.Subsystems;
 
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
@@ -9,25 +10,25 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.util.Range;
 
 
-
+@Config
 public class Slide
 {
     // Constante pentru caracterizarea alunecării (Slide characterization).
 
     // KP specifică coeficientul proporțional al regulatorului PID din PIDF.
 
-    private static final double KP = 0;
+    private static final double KP = 0.008;
 
     // KI specifică coeficientul integral al regulatorului PID din PIDF.
     private static final double KI = 0;
 
     // KD specifică coeficientul derivativ al regulatorului PID din PIDF.
 
-    private static final double KD = 0;
+    private static final double KD = 0.0001;
 
     // KF specifică puterea de menținere a alunecării la orice înălțime.
 
-    private static final double KF = 0;
+    private static final double KF = 0.055;
 
     // ZERO_OFFSET specifică lungimea extensiei alunecării în inci în poziția de repaus (de obicei 0.0).
     private static final double ZERO_OFFSET = 0.0;
@@ -39,7 +40,7 @@ public class Slide
     private static final double MAX_POS = 39.37;
 
     // TICKS_PER_INCH specifică factorul de scalare pentru a traduce lungimea extensiei alunecării din inci în tickeți ai encoderului.
-    private static final double TICKS_PER_INCH = 537.7;
+    private static final double TICKS_PER_INCH = 29.83;
 
     // Componentele sub-sistemului de alunecare.
     private final DcMotorEx leftMotor;
@@ -175,6 +176,7 @@ public class Slide
      */
     public double getPosition()
     {
+        //return leftMotor.getCurrentPosition();
         return ticksToRealWorldInches(leftMotor.getCurrentPosition());
     }
 }

@@ -19,7 +19,7 @@ public class ServoTest extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        servo = hardwareMap.get(Servo.class,"servo");
+        servo = hardwareMap.get(Servo.class,"ROTATESERVO");
 
         waitForStart();
         while(opModeIsActive()){

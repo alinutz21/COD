@@ -5,13 +5,15 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
 @Config
 public class BetterOuttake {
     public Slide slide;
     public Servo liftServo;
     ElapsedTime liftTimer = new ElapsedTime();
-    public ValoriFunctii valori;
+    public ValoriFunctii valori = new ValoriFunctii();
     public enum State {
         GROUND,
         EXTEND,
@@ -32,22 +34,19 @@ public class BetterOuttake {
 
     // TIMPUL ALOCAT PENTRU CA SERVO-UL SA PUNA PIESA IN COS
     final double DUMP_TIME = valori.DUMP_TIME;
-    double cmToInch(double x){
-        final double cmPerInch = 2.54000508;
-        return x / cmPerInch;
-    }
-
 
 
     public void init(HardwareMap hardwareMap){
-        slide = new Slide(hardwareMap,"LIFTMOTOR",false,true);
+        slide = new Slide(hardwareMap,"LIFTMOTOR",true,false);
+        liftServo = hardwareMap.get(Servo.class,"LIFTSERVO");
         liftTimer.reset();
 
         SetState(State.GROUND);
     }
 
     public void SetState(State state) { currentState = state;}
-    public void Loop(Gamepad gp){
+    public void Loop(Gamepad gp, Telemetry telemetry) {
+
         switch (currentState){
             case GROUND:
                 if(gp.x){
@@ -56,9 +55,9 @@ public class BetterOuttake {
                 }
                 break;
             case EXTEND:
-                if(slide.isOnTarget(cmToInch(10))) {
+                if(slide.isOnTarget(5)) {
 
-                    liftServo.setPosition(DEPOSIT_SCORING);
+                   liftServo.setPosition(DEPOSIT_SCORING);
                     liftTimer.reset();
                     currentState = State.DUMP;
                 }
@@ -66,12 +65,12 @@ public class BetterOuttake {
             case DUMP:
                 if(liftTimer.seconds() >= DUMP_TIME){
                     liftServo.setPosition(DEPOSIT_IDLE);
-                    slide.setPosition(LIFT_DOWN,-0.5);
+                    slide.setPosition(LIFT_DOWN,0.2);
                     currentState = State.RETRACT;
                 }
                 break;
             case RETRACT:
-                if(slide.isOnTarget(cmToInch(9))){
+                if(slide.isOnTarget(5)){
                     currentState = State.GROUND;
                 }
                 break;
@@ -82,6 +81,10 @@ public class BetterOuttake {
             currentState = State.GROUND;
         }
 
+        telemetry.addData("pozitie curenta",slide.getPosition());
+        telemetry.addData("Target",LIFT_UP);
+        telemetry.addData("Timp",liftTimer.seconds());
+        telemetry.update();
         slide.slideUpdate();
     }
 
