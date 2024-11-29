@@ -1,17 +1,15 @@
-package org.firstinspires.ftc.teamcode.COD;
+package org.firstinspires.ftc.teamcode.COD.TunningSubsystems;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
-import org.ejml.data.MatrixType;
-import org.firstinspires.ftc.teamcode.COD.RR.TankDrive;
-
+@Disabled
 @Config
 @TeleOp(name = "Outtake Tunning",group = "Tunning")
 public class Outake_Tunning extends LinearOpMode {

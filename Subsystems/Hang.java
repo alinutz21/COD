@@ -3,8 +3,11 @@ package org.firstinspires.ftc.teamcode.COD.Subsystems;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
 public class Hang {
@@ -16,12 +19,11 @@ public class Hang {
 
         hang1Motor = hardwareMap.get(DcMotorEx.class,"HANG1MOTOR");
         hang2Motor = hardwareMap.get(DcMotorEx.class,"HANG2MOTOR");
-        hang1Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hang2Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hang1Motor.setDirection(DcMotorSimple.Direction.REVERSE);
         hang1Motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         hang2Motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
-    public void Loop(Gamepad gp){
+    public void Loop(Gamepad gp,Telemetry telemetry){
         if(gp.dpad_up){
             power = 1;
         }

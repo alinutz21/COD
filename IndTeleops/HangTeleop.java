@@ -6,30 +6,26 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.COD.Subsystems.BetterOuttake;
-@TeleOp(name="Outake Subsystem", group="Subsisteme")
-public class OutakeTeleop extends LinearOpMode {
-    Gamepad gp2;
-    BetterOuttake outake;
+import org.firstinspires.ftc.teamcode.COD.Subsystems.Hang;
+import org.firstinspires.ftc.teamcode.COD.Subsystems.Intake;
 
-
+@TeleOp(name="Hang Subsytem", group="Subsisteme")
+public class HangTeleop extends LinearOpMode {
+    Gamepad gp;
+    Hang hang = null;
 
     @Override
     public void runOpMode(){
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
-        outake = new BetterOuttake();
+        hang = new Hang();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        outake.init(hardwareMap);
 
-        gp2 = gamepad2;
+        hang.init(hardwareMap);
+        gp = gamepad1;
 
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            outake.Loop(gp2,telemetry);
-            telemetry.update();
+            hang.Loop(gp,telemetry);
         }
     }
 }

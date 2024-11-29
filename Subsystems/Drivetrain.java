@@ -28,15 +28,17 @@ public class Drivetrain {
 
 
     public void Loop(Gamepad gp){
+
+
         drive.setDrivePowers(new PoseVelocity2d(
                 new Vector2d(
-                        -gp.left_stick_y,
-                        -(gp.right_trigger - gp.left_trigger)
+                        (gp.right_trigger - gp.left_trigger * 0.65),
+                        -gp.left_stick_x
                 ),
                 -gp.right_stick_x
         ));
 // TODO: Verifica daca ai nevoie de functia asta, s-ar putea sa ingreuneze programul degeaba
-        drive.updatePoseEstimate();
+      //  drive.updatePoseEstimate();
     }
 
 

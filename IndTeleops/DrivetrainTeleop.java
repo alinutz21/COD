@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.COD.Subsystems.Drivetrain;
 
 @TeleOp(name="Drivetrain Subsystem", group="Subsisteme")
 public class DrivetrainTeleop extends LinearOpMode {
-    private Gamepad gp1;
-    private Drivetrain drivetrain;
+    Gamepad gp1;
+    Drivetrain drivetrain;
 
     @Override
     public void runOpMode(){

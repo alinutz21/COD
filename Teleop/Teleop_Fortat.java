@@ -18,27 +18,27 @@ import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
 
 @TeleOp(name="Teleop fortat", group="Linear OpMode")
 public class Teleop_Fortat extends LinearOpMode {
-    public ValoriFunctii valori;
+    ValoriFunctii valori;
     private ElapsedTime runtime = new ElapsedTime();
-    private Gamepad gp1,gp2;
+    Gamepad gp1,gp2;
 
 ///     DRIVETRAIN ____________________________________________
 
-    public MecanumDrive drive;
-    public Pose2d pose;
+    MecanumDrive drive;
+    Pose2d pose;
 
 ///     OUTAKE ________________________________________________
-    public DcMotorEx liftMotor;
-    public Servo liftServo;
+    DcMotorEx liftMotor;
+    Servo liftServo;
     /// VALORILE PENTRU SERVO-UL CARE DEPOZITEAZA
 
     final double DEPOSIT_IDLE = valori.DEPOSIT_IDLE; // pozitia lui normala
     final double DEPOSIT_SCORING = valori.DEPOSIT_SCORING; // pozitia lui cand scoreaza
 
 ///     INTAKE _________________________________________________
-    public Servo extensionServo;
-    public CRServo activeIntakeServo;
-    public Servo bendOverServo;
+    Servo extensionServo;
+    CRServo activeIntakeServo;
+    Servo bendOverServo;
     final double EXT_HOME = valori.EXT_HOME; // pozitia lui normala
     final double EXT_EXTENDED = valori.EXT_EXTENDED; // pozitia lui cand arunca piesa
 
@@ -68,8 +68,8 @@ public class Teleop_Fortat extends LinearOpMode {
         /// OUTAKE
         liftMotor = hardwareMap.get(DcMotorEx.class,"LIFTMOTOR");
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-      //  liftServo.setPosition(DEPOSIT_IDLE);
-      //  liftServo = hardwareMap.get(Servo.class,"LIFTSERVO");
+        liftServo.setPosition(DEPOSIT_IDLE);
+        liftServo = hardwareMap.get(Servo.class,"LIFTSERVO");
 
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -105,12 +105,12 @@ public class Teleop_Fortat extends LinearOpMode {
 
             /// OUTAKE
             liftMotor.setPower(gp2.left_trigger - gp2.right_trigger);
-            /*
+
             if(gp2.dpad_left)
                 liftServo.setPosition(DEPOSIT_SCORING);
             if(gp2.dpad_right)
                 liftServo.setPosition(DEPOSIT_IDLE);
-            */
+
 
             /// INTKAE
             if(gp2.a){ // PRELUAREA

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.COD;
+package org.firstinspires.ftc.teamcode.COD.TunningSubsystems;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 
@@ -7,7 +7,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
+
 @Config
 @TeleOp(name = "Servo test",group = "Tests")
 public class ServoTest extends LinearOpMode {
@@ -19,8 +19,8 @@ public class ServoTest extends LinearOpMode {
     public void runOpMode(){
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        
-        servo = hardwareMap.get(Servo.class,"ROTATESERVO");
+
+        servo = hardwareMap.get(Servo.class,numeServo);
 
         waitForStart();
         while(opModeIsActive()){

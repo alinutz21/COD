@@ -9,7 +9,7 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
-
+@Deprecated
 @Config
 public class Outake {
     private PIDController controller;
@@ -37,7 +37,8 @@ public class Outake {
      *  VALORILE PENTRU BRATUL DE RIDICARE
      */
     final int LIFT_DOWN = valori.LIFT_DOWN; // pozitia de jos
-    final int LIFT_UP = valori.LIFT_UP; // pozitia de sus
+    final int LIFT_BASKET1 = valori.LIFT_BASKET1; // pozitia de la basket 1
+    final int LIFT_BASKET2 = valori.LIFT_BASKET2; // pozitia de la basket 2
     /*
     *   VALORILE PENTRU SERVO-UL CARE DEPOZITEAZA
      */
@@ -77,12 +78,12 @@ public class Outake {
         switch (currentState){
             case GROUND:
                 if(gp.x){
-                    target = LIFT_UP;
+                    target = LIFT_BASKET1;
                     currentState = State.EXTEND;
                 }
                 break;
             case EXTEND:
-                if(Math.abs(liftMotor.getCurrentPosition()-LIFT_UP)<10) {
+                if(Math.abs(liftMotor.getCurrentPosition()-LIFT_BASKET1)<10) {
 
                     liftServo.setPosition(DEPOSIT_SCORING);
                     liftTimer.reset();
