@@ -13,13 +13,14 @@ import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
 public class ServoTest extends LinearOpMode {
 
     public static double pozitie = 0.5;
+    public static String numeServo = "SERVO";
     private Servo servo;
     @Override
     public void runOpMode(){
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        servo = hardwareMap.get(Servo.class,"servo");
+        servo = hardwareMap.get(Servo.class,numeServo);
 
         waitForStart();
         while(opModeIsActive()){
