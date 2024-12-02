@@ -46,7 +46,7 @@ public class Outake {
     final double DEPOSIT_SCORING = valori.DEPOSIT_SCORING; // pozitia lui cand arunca piesa
 
     // TIMPUL ALOCAT PENTRU CA SERVO-UL SA PUNA PIESA IN COS
-    final double DUMP_TIME = valori.DUMP_TIME;
+    final double DUMP_TIME = valori.DUMP_BASKET_TIME;
 
     public void init(HardwareMap hardwareMap){
         controller = new PIDController(p,i,d);

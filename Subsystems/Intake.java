@@ -56,7 +56,7 @@ public class Intake {
 
         switch (currentState){
             case HOME:
-                if(gp.b){
+                if(gp.dpad_left){
                     bendOverServo.setPosition(DMP_SCORING_SIDE);
                     extensionServo.setPosition(EXT_EXTENDED);
                     currentState = State.EXTEND;

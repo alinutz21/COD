@@ -17,18 +17,18 @@ public class Slide
 
     // KP specifică coeficientul proporțional al regulatorului PID din PIDF.
 
-    private static final double KP = 0.008;
+    public static double KP = 0.008;
 
     // KI specifică coeficientul integral al regulatorului PID din PIDF.
-    private static final double KI = 0;
+    public static double KI = 0;
 
     // KD specifică coeficientul derivativ al regulatorului PID din PIDF.
 
-    private static final double KD = 0.0001;
+    public static double KD = 0.0001;
 
     // KF specifică puterea de menținere a alunecării la orice înălțime.
 
-    private static final double KF = 0.055;
+    public static double KF = 0.055;
 
     // ZERO_OFFSET specifică lungimea extensiei alunecării în inci în poziția de repaus (de obicei 0.0).
     private static final double ZERO_OFFSET = 0.0;
@@ -37,7 +37,7 @@ public class Slide
     private static final double MIN_POS = ZERO_OFFSET;
 
     // MAX_POS specifică lungimea extensiei alunecării în inci în poziția sa maximă.
-    private static final double MAX_POS = 39.37;
+    private static final double MAX_POS = 39.3;
 
     // TICKS_PER_INCH specifică factorul de scalare pentru a traduce lungimea extensiei alunecării din inci în tickeți ai encoderului.
     private static final double TICKS_PER_INCH = 29.83;

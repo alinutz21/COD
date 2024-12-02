@@ -34,7 +34,7 @@ public class BetterOuttake {
     final double DEPOSIT_SCORING = valori.DEPOSIT_SCORING; // pozitia lui cand arunca piesa
 
     // TIMPUL ALOCAT PENTRU CA SERVO-UL SA PUNA PIESA IN COS
-    final double DUMP_TIME = valori.DUMP_TIME;
+    final double DUMP_TIME = valori.DUMP_BASKET_TIME;
 
     final double SPECIMEN_OPEN = valori.SPECIMEN_OPEN;
     final double SPECIMEN_CLOSED = valori.SPECIMEN_CLOSED;

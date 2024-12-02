@@ -33,7 +33,7 @@ public class BettterOuttake {
     /*
      *  VALORILE PENTRU BRATUL DE RIDICARE
      */
-    final int LIFT_HOME = valori.LIFT_HOME; // pozitia de jos
+    final int LIFT_HOME = valori.LIFT_DOWN; // pozitia de jos
     final int LIFT_BASKET1 = valori.LIFT_BASKET1; // pozitia de sus
     final int LIFT_BASKET2 = valori.LIFT_BASKET2; // pozitia de sus
     final int LIFT_SPECIMEN1 = valori.LIFT_SPECIMEN1; // pozitia de sus
@@ -58,15 +58,16 @@ public class BettterOuttake {
         liftServo = hardwareMap.get(Servo.class,"LIFTSERVO");
         specimenServo = hardwareMap.get(Servo.class,"SPECIMENSERVO");
         liftServo.setPosition(DEPOSIT_IDLE);
-        specimenServo.setPosition(SPECIMEN_CLOSED);
+        // specimenServo.setPosition(0.6);
         liftTimer.reset();
         liftTimerSpecimen.reset();
         currentState = State.GROUND;
-
     }
 
  //   public void SetState(State state) { currentState = state;}
     public void Loop(Gamepad gp1, Gamepad gp2, Telemetry telemetry) {
+
+       
 
         switch (currentState){
             case GROUND:
@@ -111,15 +112,15 @@ public class BettterOuttake {
                 break;
             case DUMP_SPECIMEN:
                 if(gp2.dpad_left || liftTimer.seconds() >= DUMP_SPECIMEN_TIME){
-                    slide.setPosition(slide.getPosition() - 5,0.3);
+                    slide.setPosition(LIFT_HOME,0.3);
                     liftTimerSpecimen.reset();
                     currentState = State.DUMPED_SPECIMEN;
                 }
                 break;
             case DUMPED_SPECIMEN:
-                if(slide.isOnTarget(1) || liftTimerSpecimen.seconds() >= 2){
+                if(slide.isOnTarget(3) || liftTimerSpecimen.seconds() >= 0.1){
                     specimenServo.setPosition(SPECIMEN_OPEN);
-                    slide.setPosition(LIFT_HOME,VITEZA_MAXIMA_COBORARE);
+                    currentState = State.RETRACT;
                 }
                 break;
             case RETRACT:

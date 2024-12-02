@@ -28,8 +28,6 @@ public class Drivetrain {
 
 
     public void Loop(Gamepad gp){
-
-
         drive.setDrivePowers(new PoseVelocity2d(
                 new Vector2d(
                         (gp.right_trigger - gp.left_trigger * 0.65),
