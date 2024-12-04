@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.COD.Subsystems.Intake;
 public class Teleop extends LinearOpMode {
     Gamepad gp1,gp2;
     Drivetrain drivetrain;
-    BettterOuttake outtake;
+    BetterOuttake outtake;
     Intake intake;
     Hang hang;
 
@@ -23,7 +23,7 @@ public class Teleop extends LinearOpMode {
     public void runOpMode(){
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        outtake = new BettterOuttake();
+        outtake = new BetterOuttake();
         intake = new Intake();
         drivetrain = new Drivetrain();
         hang = new Hang();

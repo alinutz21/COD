@@ -67,7 +67,7 @@ public class BettterOuttake {
  //   public void SetState(State state) { currentState = state;}
     public void Loop(Gamepad gp1, Gamepad gp2, Telemetry telemetry) {
 
-       
+
 
         switch (currentState){
             case GROUND:

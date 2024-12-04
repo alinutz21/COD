@@ -14,7 +14,9 @@ public class Intake {
     public Servo extensionServo;
     public CRServo activeIntakeServo;
     public Servo bendOverServo;
+    public Servo liftServo;
     ElapsedTime liftTimer = new ElapsedTime();
+    ElapsedTime horizontalTime = new ElapsedTime();
     public ValoriFunctii valori = new ValoriFunctii();
 
     public enum State {
@@ -40,14 +42,14 @@ public class Intake {
         liftTimer.reset();
 
         extensionServo = hardwareMap.get(Servo.class,"EXTENSIONSERVO");
-        extensionServo.setPosition(EXT_HOME);
+      //  extensionServo.setPosition(EXT_HOME);
 
         activeIntakeServo = hardwareMap.get(CRServo.class,"WHEELSERVO");
 
         bendOverServo = hardwareMap.get(Servo.class,"ROTATESERVO");
         bendOverServo.setPosition(DMP_INTAKE_SIDE);
 
-
+        liftServo = hardwareMap.get(Servo.class,"LIFTSERVO");
         SetState(State.HOME);
     }
 
@@ -56,7 +58,7 @@ public class Intake {
 
         switch (currentState){
             case HOME:
-                if(gp.dpad_left){
+                if(gp.x){
                     bendOverServo.setPosition(DMP_SCORING_SIDE);
                     extensionServo.setPosition(EXT_EXTENDED);
                     currentState = State.EXTEND;
@@ -70,15 +72,20 @@ public class Intake {
                 }
                 break;
             case INTAKE:
-                if(liftTimer.seconds() >= INTAKE_TIME){
-                    activeIntakeServo.setPower(0);
+                if(gp.b){
                     bendOverServo.setPosition(DMP_INTAKE_SIDE);
                     extensionServo.setPosition(EXT_HOME);
+                    horizontalTime.reset();
                     currentState = State.RETRACT;
                 }
                 break;
             case RETRACT:
-                if(Math.abs(extensionServo.getPosition()-EXT_HOME) < 3){
+                if(horizontalTime.seconds() >= 1){
+                    liftServo.setPosition(valori.DEPOZIT_HORIZONTAL);
+                }
+                if(Math.abs(extensionServo.getPosition()-EXT_HOME) < 0.05){
+                    activeIntakeServo.setPower(0);
+
                     currentState = State.HOME;
                 }
                 break;
