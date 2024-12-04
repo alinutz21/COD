@@ -34,10 +34,10 @@ public class Slide
     private static final double ZERO_OFFSET = 0.0;
 
     // MIN_POS specifică lungimea extensiei alunecării în inci în poziția sa minimă (de obicei aceeași cu ZERO_OFFSET).
-    private static final double MIN_POS = ZERO_OFFSET;
+    private static final double MIN_POS = -1;
 
     // MAX_POS specifică lungimea extensiei alunecării în inci în poziția sa maximă.
-    private static final double MAX_POS = 39.3;
+    private static final double MAX_POS = 40;
 
     // TICKS_PER_INCH specifică factorul de scalare pentru a traduce lungimea extensiei alunecării din inci în tickeți ai encoderului.
     private static final double TICKS_PER_INCH = 29.83;

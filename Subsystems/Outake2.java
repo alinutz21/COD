@@ -12,9 +12,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
 @Config
-public class Outake {
-    //   public Slide slide;
-    public Slide slide;
+public class Outake2 {
+ //   public Slide slide;
+    public DcMotorEx liftMotor;
     public Servo liftServo;
     public Servo specimenServo;
     public enum State {
@@ -35,32 +35,24 @@ public class Outake {
 
 
     public void init(HardwareMap hardwareMap){
-        slide = new Slide(hardwareMap,"LIFTMOTOR",true,false);
+       // slide = new Slide(hardwareMap,"LIFTMOTOR",true,false);
+        liftMotor = hardwareMap.get(DcMotorEx.class,"LIFTMOTOR");
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftServo = hardwareMap.get(Servo.class,"LIFTSERVO");
         specimenServo = hardwareMap.get(Servo.class,"SPECIMENSERVO");
-        liftServo.setPosition(valori.DEPOZIT_HORIZONTAL);
+        liftServo.setPosition(DEPOSIT_IDLE);
         dumpTimer.reset();
 
     }
-    double prevSlidePower = 0.0;
+
     public void Loop(Gamepad gp2, Telemetry telemetry) {
-        double slidePower = gp2.left_trigger / 0.4 - gp2.right_trigger /0.2;
-     //   slidePower = Math.abs(slidePower) >= 0.05 ? slidePower : 0.0; /// TODO: VERIRICA DACA ARE ROST LINIA ASTA
-        if (slidePower != 0.0)
-        {
-            // Joystick action always interrupts and overrides button action.
-            slide.setPowers(slidePower);
-            prevSlidePower = slidePower;
-        }
-        else if (prevSlidePower != 0.0)
-        {
-            // Operator just let go the joystick. Stop the slide and hold its position.
-            slide.setPowers(0.0);
-            prevSlidePower = 0.0;
-        }
+        liftMotor.setPower(gp2.left_trigger - gp2.right_trigger);
         switch (currentState){
             case HORIZONTAL:
-                if(gp2.y) {
+                if(gp2.dpad_down) {
                     liftServo.setPosition(DEPOSIT_SCORING);
                     dumpTimer.reset();
                     currentState = State.INCLINED;
@@ -78,7 +70,9 @@ public class Outake {
 
         if(gp2.dpad_left) // deschide
             specimenServo.setPosition(SPECIMEN_OPEN);
-        if(gp2.dpad_right) // inchide
+        if(gp2.dpad_right)
             specimenServo.setPosition(SPECIMEN_CLOSED);
+        telemetry.addData("MOTOR",liftMotor.getCurrentPosition());
+        telemetry.update();
     }
 }
