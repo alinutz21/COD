@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.COD.Subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -10,28 +13,22 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
 @Config
 public class BetterOuttake {
-    public Slide slide;
+ //   public Slide slide;
+    public DcMotorEx liftMotor;
     public Servo liftServo;
     public Servo specimenServo;
+    public enum State {
+        NORMAL,
+        HORIZONTAL,
+        INCLINED,
+        RESTING
+    }
+    State currentState = State.HORIZONTAL;
     ElapsedTime liftTimer = new ElapsedTime();
     public ValoriFunctii valori = new ValoriFunctii();
-    public enum State {
-        GROUND,
-        EXTEND,
-        DUMP,
-        RETRACT
-    }
-    State currentState = State.GROUND;
-    /*
-     *  VALORILE PENTRU BRATUL DE RIDICARE
-     */
-    final int LIFT_DOWN = valori.LIFT_DOWN; // pozitia de jos
-    final int LIFT_UP = valori.LIFT_BASKET1; // pozitia de sus
-    /*
-     *   VALORILE PENTRU SERVO-UL CARE DEPOZITEAZA
-     */
     final double DEPOSIT_IDLE = valori.DEPOSIT_IDLE; // pozitia lui normala
     final double DEPOSIT_SCORING = valori.DEPOSIT_SCORING; // pozitia lui cand arunca piesa
+    final double DEPOSIT_HORIZONTAL = valori.DEPOZIT_HORIZONTAL;
 
     // TIMPUL ALOCAT PENTRU CA SERVO-UL SA PUNA PIESA IN COS
     final double DUMP_TIME = valori.DUMP_BASKET_TIME;
@@ -41,64 +38,46 @@ public class BetterOuttake {
 
 
     public void init(HardwareMap hardwareMap){
-        slide = new Slide(hardwareMap,"LIFTMOTOR",true,false);
+       // slide = new Slide(hardwareMap,"LIFTMOTOR",true,false);
+        liftMotor = hardwareMap.get(DcMotorEx.class,"LIFTMOTOR");
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftServo = hardwareMap.get(Servo.class,"LIFTSERVO");
         specimenServo = hardwareMap.get(Servo.class,"SPECIMENSERVO");
         liftServo.setPosition(DEPOSIT_IDLE);
-        specimenServo.setPosition(SPECIMEN_CLOSED);
         liftTimer.reset();
-        SetState(State.GROUND);
+
     }
+    double prevSlidePower = 0.0;
+    public void Loop(Gamepad gp1, Gamepad gp2, Telemetry telemetry) {
 
-    public void SetState(State state) { currentState = state;}
-    public void Loop(Gamepad gp, Telemetry telemetry) {
-
+        liftMotor.setPower(gp2.left_trigger - gp2.right_trigger);
         switch (currentState){
-            case GROUND:
-                if(gp.x){
-                    slide.setPosition(LIFT_UP,0.5);
-                    currentState = State.EXTEND;
-                }
-                break;
-            case EXTEND:
-                if(slide.isOnTarget(5)) {
-
-                   liftServo.setPosition(DEPOSIT_SCORING);
+            case HORIZONTAL:
+                if(gp2.dpad_down) {
+                    liftServo.setPosition(DEPOSIT_SCORING);
                     liftTimer.reset();
-                    currentState = State.DUMP;
+                    currentState = State.INCLINED;
                 }
+
                 break;
-            case DUMP:
-                if(liftTimer.seconds() >= DUMP_TIME){
+            case INCLINED:
+                if(liftTimer.seconds()>= 2){
                     liftServo.setPosition(DEPOSIT_IDLE);
-                    slide.setPosition(LIFT_DOWN,0.2);
-                    currentState = State.RETRACT;
-                }
-                break;
-            case RETRACT:
-                if(slide.isOnTarget(5)){
-                    currentState = State.GROUND;
+                    currentState = State.HORIZONTAL;
                 }
                 break;
             default:
-                currentState = State.GROUND;
+                currentState = State.HORIZONTAL;
         }
-        if(gp.y && currentState != State.GROUND){
-            currentState = State.GROUND;
-        }
-        if(gp.dpad_left) // deschide
+
+        if(gp2.dpad_left) // deschide
             specimenServo.setPosition(SPECIMEN_OPEN);
-        if(gp.dpad_right)
+        if(gp2.dpad_right)
             specimenServo.setPosition(SPECIMEN_CLOSED);
-
-
-        telemetry.addData("pozitie curenta",slide.getPosition());
-        telemetry.addData("Target",LIFT_UP);
-        telemetry.addData("Timp",liftTimer.seconds());
+        telemetry.addData("MOTOR",liftMotor.getCurrentPosition());
         telemetry.update();
-        slide.slideUpdate();
     }
-
-
-
 }
