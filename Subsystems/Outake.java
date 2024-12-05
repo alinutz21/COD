@@ -32,7 +32,7 @@ public class Outake {
 
     final double SPECIMEN_OPEN = valori.SPECIMEN_OPEN;
     final double SPECIMEN_CLOSED = valori.SPECIMEN_CLOSED;
-
+    boolean merge = false;
 
     public void init(HardwareMap hardwareMap){
         slide = new Slide(hardwareMap,"LIFTMOTOR",true,false);
@@ -41,10 +41,11 @@ public class Outake {
         liftServo.setPosition(valori.DEPOZIT_HORIZONTAL);
         dumpTimer.reset();
 
+
     }
     double prevSlidePower = 0.0;
     public void Loop(Gamepad gp2, Telemetry telemetry) {
-        double slidePower = gp2.left_trigger / 0.4 - gp2.right_trigger /0.2;
+        double slidePower = -(gp2.left_trigger * 0.4 - gp2.right_trigger * 0.65);
      //   slidePower = Math.abs(slidePower) >= 0.05 ? slidePower : 0.0; /// TODO: VERIRICA DACA ARE ROST LINIA ASTA
         if (slidePower != 0.0)
         {
@@ -58,27 +59,25 @@ public class Outake {
             slide.setPowers(0.0);
             prevSlidePower = 0.0;
         }
-        switch (currentState){
-            case HORIZONTAL:
-                if(gp2.y) {
-                    liftServo.setPosition(DEPOSIT_SCORING);
-                    dumpTimer.reset();
-                    currentState = State.INCLINED;
-                }
-                break;
-            case INCLINED:
-                if(dumpTimer.seconds()>= DUMP_TIME){
-                    liftServo.setPosition(DEPOSIT_IDLE);
-                    currentState = State.HORIZONTAL;
-                }
-                break;
-            default:
-                currentState = State.HORIZONTAL;
+
+        if(slide.getPosition() > 1 && slidePower > 0){
+            liftServo.setPosition(valori.DEPOZIT_HORIZONTAL);
+        }
+        if(slidePower < 0 && slide.getPosition() > 5){
+            liftServo.setPosition(valori.DEPOSIT_IDLE);
+        }
+        if(gp2.y){
+            liftServo.setPosition(DEPOSIT_SCORING);
         }
 
+        slide.slideUpdate();
         if(gp2.dpad_left) // deschide
             specimenServo.setPosition(SPECIMEN_OPEN);
         if(gp2.dpad_right) // inchide
             specimenServo.setPosition(SPECIMEN_CLOSED);
+
+        telemetry.addData("Putere",slidePower);
+        telemetry.addData("Motor",slide.getPosition());
+        telemetry.update();
     }
 }

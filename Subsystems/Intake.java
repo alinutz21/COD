@@ -60,7 +60,6 @@ public class Intake {
                     extensionServo.setPosition(EXT_EXTENDED);
                     bendOverServo.setPosition(DMP_SCORING_SIDE);
                     liftServo.setPosition(valori.DEPOSIT_IDLE);
-
                     currentState = State.EXTEND;
                 }
                 break;
@@ -71,7 +70,7 @@ public class Intake {
                 }
                 break;
             case INTAKE:
-                if(gp.y){
+                if(gp.b){
                     bendOverServo.setPosition(DMP_INTAKE_SIDE);
                     extensionServo.setPosition(EXT_HOME);
                     returnHomeTime.reset();
@@ -81,7 +80,7 @@ public class Intake {
             case RETRACT:
                 if(returnHomeTime.seconds() >= RETURN_TIME){
                     activeIntakeServo.setPower(0);
-                    liftServo.setPosition(valori.DEPOZIT_HORIZONTAL);
+                  //  liftServo.setPosition(valori.DEPOZIT_HORIZONTAL);
                     currentState = State.HOME;
                 }
                 break;

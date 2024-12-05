@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "Servo test",group = "Tests")
 public class ServoTest extends LinearOpMode {
 
-    public static double pozitie = 0.5;
-    public static String numeServo = "SERVO";
+    public static double pozitie = 0.75;
+    public static String numeServo = "EXTENSIONSERVO";
     private Servo servo;
     @Override
     public void runOpMode(){

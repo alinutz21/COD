@@ -6,18 +6,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.COD.Subsystems.BetterOuttake;
-import org.firstinspires.ftc.teamcode.COD.Subsystems.BettterOuttake;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.Hang;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.COD.Subsystems.Outake2;
+import org.firstinspires.ftc.teamcode.COD.Subsystems.Outake;
 
 @TeleOp(name="TeleOP", group="Linear OpMode")
 public class Teleop extends LinearOpMode {
     Gamepad gp1,gp2;
     Drivetrain drivetrain;
-    Outake2 outtake;
+    Outake outtake;
     Intake intake;
     Hang hang;
 
@@ -25,7 +23,7 @@ public class Teleop extends LinearOpMode {
     public void runOpMode(){
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        outtake = new Outake2();
+        outtake = new Outake();
         intake = new Intake();
         drivetrain = new Drivetrain();
         hang = new Hang();
