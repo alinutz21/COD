@@ -16,7 +16,6 @@ public class outtake_sus extends LinearOpMode {
     Gamepad gp2;
     public DcMotorEx motor;
     public String numeMotor = "LIFTMOTOR";
-
     @Override
     public void runOpMode(){
         motor = hardwareMap.get(DcMotorEx.class,numeMotor);

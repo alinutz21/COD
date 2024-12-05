@@ -80,7 +80,6 @@ public class Intake {
             case RETRACT:
                 if(returnHomeTime.seconds() >= RETURN_TIME){
                     activeIntakeServo.setPower(0);
-                  //  liftServo.setPosition(valori.DEPOZIT_HORIZONTAL);
                     currentState = State.HOME;
                 }
                 break;
@@ -88,12 +87,11 @@ public class Intake {
                 currentState = State.HOME;
         }
         if(gp.a && currentState != State.HOME){
+            activeIntakeServo.setPower(0);
             liftServo.setPosition(valori.DEPOSIT_IDLE);
             bendOverServo.setPosition(DMP_INTAKE_SIDE);
-            activeIntakeServo.setPower(0);
             extensionServo.setPosition(EXT_HOME);
             currentState = State.HOME;
-            // TODO: Scrie codul pentru intoarcerea bratului inapoi la pozitia initiala
         }
     }
 

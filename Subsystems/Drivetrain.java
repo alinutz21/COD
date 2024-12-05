@@ -35,8 +35,6 @@ public class Drivetrain {
                 ),
                 -gp.right_stick_x
         ));
-// TODO: Verifica daca ai nevoie de functia asta, s-ar putea sa ingreuneze programul degeaba
-      //  drive.updatePoseEstimate();
     }
 
 

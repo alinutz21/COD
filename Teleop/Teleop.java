@@ -40,8 +40,8 @@ public class Teleop extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             drivetrain.Loop(gp1);
-            intake.Loop(gp2); // TODO: TESTEAZA PENTRU DRIVER 1
-            outtake.Loop(gp2,telemetry); // TODO: TESTEAZA PENTRU DRIVER 1
+            intake.Loop(gp2);
+            outtake.Loop(gp2,telemetry);
             hang.Loop(gp1,telemetry);
         }
     }

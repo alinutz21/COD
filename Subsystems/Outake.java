@@ -27,35 +27,25 @@ public class Outake {
     final double DEPOSIT_IDLE = valori.DEPOSIT_IDLE; // pozitia lui normala
     final double DEPOSIT_SCORING = valori.DEPOSIT_SCORING; // pozitia lui cand arunca piesa
 
-    // TIMPUL ALOCAT PENTRU CA SERVO-UL SA PUNA PIESA IN COS
-    final double DUMP_TIME = valori.DUMP_BASKET_TIME;
-
     final double SPECIMEN_OPEN = valori.SPECIMEN_OPEN;
     final double SPECIMEN_CLOSED = valori.SPECIMEN_CLOSED;
-    boolean merge = false;
 
     public void init(HardwareMap hardwareMap){
         slide = new Slide(hardwareMap,"LIFTMOTOR",true,false);
         liftServo = hardwareMap.get(Servo.class,"LIFTSERVO");
         specimenServo = hardwareMap.get(Servo.class,"SPECIMENSERVO");
-        liftServo.setPosition(valori.DEPOZIT_HORIZONTAL);
+        liftServo.setPosition(valori.DEPOSIT_IDLE);
         dumpTimer.reset();
-
-
     }
     double prevSlidePower = 0.0;
     public void Loop(Gamepad gp2, Telemetry telemetry) {
         double slidePower = -(gp2.left_trigger * 0.4 - gp2.right_trigger * 0.65);
-     //   slidePower = Math.abs(slidePower) >= 0.05 ? slidePower : 0.0; /// TODO: VERIRICA DACA ARE ROST LINIA ASTA
-        if (slidePower != 0.0)
-        {
-            // Joystick action always interrupts and overrides button action.
+
+        if (slidePower != 0.0) {
             slide.setPowers(slidePower);
             prevSlidePower = slidePower;
         }
-        else if (prevSlidePower != 0.0)
-        {
-            // Operator just let go the joystick. Stop the slide and hold its position.
+        else if (prevSlidePower != 0.0) {
             slide.setPowers(0.0);
             prevSlidePower = 0.0;
         }
@@ -69,15 +59,12 @@ public class Outake {
         if(gp2.y){
             liftServo.setPosition(DEPOSIT_SCORING);
         }
-
         slide.slideUpdate();
         if(gp2.dpad_left) // deschide
             specimenServo.setPosition(SPECIMEN_OPEN);
         if(gp2.dpad_right) // inchide
             specimenServo.setPosition(SPECIMEN_CLOSED);
 
-        telemetry.addData("Putere",slidePower);
-        telemetry.addData("Motor",slide.getPosition());
-        telemetry.update();
+
     }
 }
