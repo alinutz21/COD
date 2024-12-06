@@ -40,8 +40,7 @@ public class ValoriFunctii {
     // TIMPUL ALOCAT PENTRU CA SERVO-UL SA PUNA PIESA IN COS
     public final double DUMP_BASKET_TIME = 1.5;
     public final double DUMP_SPECIMEN_TIME = 5;
-    public final double SPECIMEN_OPEN = 0.7;
-    public final double SPECIMEN_CLOSED = 0.4;
-
+    public final double SPECIMEN_OPEN = 0.5;
+    public final double SPECIMEN_CLOSED = 0.25;
 
 }
