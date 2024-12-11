@@ -15,7 +15,7 @@ public class ValoriFunctii {
     public final double DMP_SCORING_SIDE = 0.95;
 
     // TIMPUL ALOCAT PENTRU CA SERVO-UL SA PUNA PIESA IN COS
-    public final double RETURN_TIME = 2;
+    public final double RETURN_TIME = 0.5;
 
     /// OUTAKE
 
@@ -35,12 +35,12 @@ public class ValoriFunctii {
      *   VALORILE PENTRU SERVO-UL CARE DEPOZITEAZA
      */
     public final double DEPOSIT_IDLE = 0.45; // pozitia lui normala
-    public final double DEPOSIT_SCORING = 0.19; // pozitia lui cand arunca piesa
+    public final double DEPOSIT_SCORING = 0.15; // pozitia lui cand arunca piesa
     public final double DEPOZIT_HORIZONTAL = 0.30;
     // TIMPUL ALOCAT PENTRU CA SERVO-UL SA PUNA PIESA IN COS
     public final double DUMP_BASKET_TIME = 1.5;
     public final double DUMP_SPECIMEN_TIME = 5;
-    public final double SPECIMEN_OPEN = 0.5;
-    public final double SPECIMEN_CLOSED = 0.25;
+    public final double SPECIMEN_OPEN = 0.65;
+    public final double SPECIMEN_CLOSED = 0.5;
 
 }

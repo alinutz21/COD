@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
+import org.opencv.features2d.BRISK;
 
 import kotlin.contracts.ReturnsNotNull;
 
@@ -17,13 +18,15 @@ public class Intake {
     public Servo bendOverServo;
     public Servo liftServo;
     ElapsedTime returnHomeTime = new ElapsedTime();
+    ElapsedTime turningBackHome = new ElapsedTime();
     public ValoriFunctii valori = new ValoriFunctii();
 
     public enum State {
         HOME,
         EXTEND,
         INTAKE,
-        RETRACT
+        RETRACT,
+        RETURNING
     }
     State currentState = State.HOME;
 
@@ -79,6 +82,13 @@ public class Intake {
                 break;
             case RETRACT:
                 if(returnHomeTime.seconds() >= RETURN_TIME){
+                    activeIntakeServo.setPower(-0.3);
+                    returnHomeTime.reset();
+                    currentState = State.RETURNING;
+                }
+                break;
+            case RETURNING:
+                if(returnHomeTime.seconds() >= 1.5){
                     activeIntakeServo.setPower(0);
                     currentState = State.HOME;
                 }

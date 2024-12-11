@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.acmerobotics.roadrunner.Action;
 
 import org.firstinspires.ftc.teamcode.COD.RR.MecanumDrive;
 import org.opencv.core.Mat;
@@ -108,14 +109,13 @@ public class RosuStanga extends LinearOpMode {
                 .waitSeconds(0.1);
 
         Action trajectoryActionCloseOut = tab1.endTrajectory().fresh()
-                .splineToConstantHeading(new Vector2d(30,15), Math.toRadians(90))
-                .lineToY(20)
-                .lineToX(10)
-                .lineToY(-23)
-                .lineToY(23)
-                .lineToX(7)
-                .lineToY(-18)
-                .lineToY(18)
+                .splineToConstantHeading(new Vector2d(-23.5,40), Math.toRadians(90))
+                .turn(Math.toRadians(-103))
+                .waitSeconds(0.3)
+                .splineToConstantHeading(new Vector2d(-18,40), Math.toRadians(90))
+                .waitSeconds(5)
+                .lineToY(15)
+                .splineToConstantHeading(new Vector2d(-40,20), Math.toRadians(90))
 
 
                 .build();

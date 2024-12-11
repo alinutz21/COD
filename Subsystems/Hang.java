@@ -16,7 +16,6 @@ public class Hang {
     double power = 0;
 
     public void init(HardwareMap hardwareMap){
-
         hang1Motor = hardwareMap.get(DcMotorEx.class,"HANG1MOTOR");
         hang2Motor = hardwareMap.get(DcMotorEx.class,"HANG2MOTOR");
         hang1Motor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -25,7 +24,7 @@ public class Hang {
     }
     public void Loop(Gamepad gp,Telemetry telemetry){
         if(gp.dpad_up){
-            power = 1;
+            
         }
         else if(gp.dpad_down){
             power = -1;

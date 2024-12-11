@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.COD.RR.MecanumDrive;
 import org.opencv.core.Mat;
@@ -108,7 +109,24 @@ public class RosuDreapta extends LinearOpMode {
                 .waitSeconds(0.1);
 
         Action trajectoryActionCloseOut = tab1.endTrajectory().fresh()
-                .splineToConstantHeading(new Vector2d(50,15), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(30,55), Math.toRadians(90))
+                .waitSeconds(0.3)
+                .turn(Math.toRadians(10))
+                .lineToY(10)
+                //.splineToConstantHeading(new Vector2d(30,10), Math.toRadians(90))
+                .waitSeconds(0.3)
+                .lineToY(55)
+                .splineToConstantHeading(new Vector2d(45, 55), Math.toRadians(90))
+                //.splineToConstantHeading(new Vector2d(45,10), Math.toRadians(90))
+                .lineToY(10)
+                //.splineToConstantHeading(new Vector2d(45, 55), Math.toRadians(90))
+                .lineToY(55)
+                .splineToConstantHeading(new Vector2d(50,55),Math.toRadians(90))
+                .lineToY(10)
+
+
+
+
                 .build();
 
         // actions that need to happen on init; for instance, a claw tightening.
@@ -120,8 +138,6 @@ public class RosuDreapta extends LinearOpMode {
             telemetry.addLine("Position during init");
             telemetry.update();
         }
-
-        waitForStart();
 
         if (isStopRequested()) return;
 

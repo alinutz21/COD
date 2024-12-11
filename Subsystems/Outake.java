@@ -26,7 +26,6 @@ public class Outake {
     public ValoriFunctii valori = new ValoriFunctii();
     final double DEPOSIT_IDLE = valori.DEPOSIT_IDLE; // pozitia lui normala
     final double DEPOSIT_SCORING = valori.DEPOSIT_SCORING; // pozitia lui cand arunca piesa
-
     final double SPECIMEN_OPEN = valori.SPECIMEN_OPEN;
     final double SPECIMEN_CLOSED = valori.SPECIMEN_CLOSED;
 
@@ -39,7 +38,7 @@ public class Outake {
     }
     double prevSlidePower = 0.0;
     public void Loop(Gamepad gp2, Telemetry telemetry) {
-        double slidePower = -(gp2.left_trigger * 0.4 - gp2.right_trigger * 0.65);
+        double slidePower = -(gp2.left_trigger * 0.4 - gp2.right_trigger * 0.75);
 
         if (slidePower != 0.0) {
             slide.setPowers(slidePower);

@@ -31,7 +31,7 @@ public class Drivetrain {
         drive.setDrivePowers(new PoseVelocity2d(
                 new Vector2d(
                         (gp.right_trigger - gp.left_trigger * 0.65),
-                        -gp.left_stick_x
+                        -gp.left_stick_x * 0.8
                 ),
                 -gp.right_stick_x
         ));
