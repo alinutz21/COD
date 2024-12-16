@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.COD.Subsystems.Hang;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.Outake;
 
-@TeleOp(name="Audi RSQ3 Sportback", group="Linear OpMode")
+@TeleOp(name="TELE OP", group="Linear OpMode")
 public class Teleop extends LinearOpMode {
     Gamepad gp1,gp2;
     Drivetrain drivetrain;

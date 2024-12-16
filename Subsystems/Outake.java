@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.COD.Subsystems;
 
+import android.transition.Slide;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -8,13 +10,13 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
+import org.firstinspires.ftc.teamcode.COD.Subsystems.SlidePiese;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
 @Config
 public class Outake {
     //   public Slide slide;
-    public Slide slide;
+    public SlidePiese slide;
     public Servo liftServo;
     public Servo specimenServo;
     public enum State {
@@ -30,7 +32,7 @@ public class Outake {
     final double SPECIMEN_CLOSED = valori.SPECIMEN_CLOSED;
 
     public void init(HardwareMap hardwareMap){
-        slide = new Slide(hardwareMap,"LIFTMOTOR",true,false);
+        slide = new SlidePiese(hardwareMap,"LIFTMOTOR",true,false);
         liftServo = hardwareMap.get(Servo.class,"LIFTSERVO");
         specimenServo = hardwareMap.get(Servo.class,"SPECIMENSERVO");
         liftServo.setPosition(valori.DEPOSIT_IDLE);

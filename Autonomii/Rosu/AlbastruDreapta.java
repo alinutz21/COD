@@ -8,15 +8,15 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.COD.RR.MecanumDrive;
 import org.opencv.core.Mat;
-
+@Disabled
 @Config
-@Autonomous(name = "\uD83D\uDD34 DREAPTA", group = "Autonomous")
-public class RosuDreapta extends LinearOpMode {
+@Autonomous(name = "ROSU STANGA", group = "Autonomous")
+public class AlbastruDreapta extends LinearOpMode {
     /*  public class Lift {
           private Slide sli
 
@@ -109,24 +109,33 @@ public class RosuDreapta extends LinearOpMode {
                 .waitSeconds(0.1);
 
         Action trajectoryActionCloseOut = tab1.endTrajectory().fresh()
-                .splineToConstantHeading(new Vector2d(30,55), Math.toRadians(90))
-                .waitSeconds(0.3)
-                .turn(Math.toRadians(10))
+                .splineToConstantHeading(new Vector2d(-5,45), Math.toRadians(90))
+                .turn(Math.toRadians(-20))
+                .lineToY(7)
+                .turn(Math.toRadians(25))
+                .splineToConstantHeading(new Vector2d(-10,45), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-25,50), Math.toRadians(90))
+                .lineToY(5)
+                .turn(Math.toRadians(-3))
+                .lineToY(50)
+                .splineToConstantHeading(new Vector2d(-29,50), Math.toRadians(90))
                 .lineToY(10)
-                //.splineToConstantHeading(new Vector2d(30,10), Math.toRadians(90))
-                .waitSeconds(0.3)
-                .lineToY(55)
-                .splineToConstantHeading(new Vector2d(45, 55), Math.toRadians(90))
-                //.splineToConstantHeading(new Vector2d(45,10), Math.toRadians(90))
-                .lineToY(10)
-                //.splineToConstantHeading(new Vector2d(45, 55), Math.toRadians(90))
-                .lineToY(55)
-                .splineToConstantHeading(new Vector2d(50,55),Math.toRadians(90))
-                .lineToY(10)
+                .lineToY(30)
 
-
-
-
+                //.splineToConstantHeading(new Vector2d(-10,55),Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(7.5,65, Math.toRadians(-170)),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(7.5,55), Math.toRadians(90))
+                .turn(Math.toRadians(-3))
+//                .splineToConstantHeading(new Vector2d(-30,30), Math.toRadians(90))
+//                .turn(Math.toRadians(-4))
+//                .splineToConstantHeading(new Vector2d(-30,55), Math.toRadians(90))
+//                .splineToConstantHeading(new Vector2d(-53,55), Math.toRadians(90))
+//                .lineToY(10)
+//                .lineToY(50)
+//                .splineToConstantHeading(new Vector2d(-56,62), Math.toRadians(90))
+//                .lineToY(15)
+//                .lineToY(30)
+//                .splineToConstantHeading(new Vector2d(-20,65), Math.toRadians(90))
                 .build();
 
         // actions that need to happen on init; for instance, a claw tightening.
@@ -138,6 +147,8 @@ public class RosuDreapta extends LinearOpMode {
             telemetry.addLine("Position during init");
             telemetry.update();
         }
+
+        waitForStart();
 
         if (isStopRequested()) return;
 

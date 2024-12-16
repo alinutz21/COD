@@ -1,5 +1,5 @@
 
-package org.firstinspires.ftc.teamcode.COD.Autonomii.Rosu;
+package org.firstinspires.ftc.teamcode.COD.Autonomii.Albastru;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -9,14 +9,12 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.acmerobotics.roadrunner.Action;
 
 import org.firstinspires.ftc.teamcode.COD.RR.MecanumDrive;
-import org.opencv.core.Mat;
 
 @Config
-@Autonomous(name = "\uD83D\uDD34 STANGA", group = "Autonomous")
-public class RosuStanga extends LinearOpMode {
+@Autonomous(name = "ALBASTRU DREAPTA", group = "Autonomous")
+public class RosuDreapta extends LinearOpMode {
     /*  public class Lift {
           private Slide sli
 
@@ -109,14 +107,21 @@ public class RosuStanga extends LinearOpMode {
                 .waitSeconds(0.1);
 
         Action trajectoryActionCloseOut = tab1.endTrajectory().fresh()
-                .splineToConstantHeading(new Vector2d(-23.5,40), Math.toRadians(90))
-                .turn(Math.toRadians(-103))
+                .splineToConstantHeading(new Vector2d(33,55), Math.toRadians(90))
                 .waitSeconds(0.3)
-                .splineToConstantHeading(new Vector2d(-18,40), Math.toRadians(90))
-                .waitSeconds(5)
-                .lineToY(15)
-                .splineToConstantHeading(new Vector2d(-40,20), Math.toRadians(90))
-
+                .turn(Math.toRadians(10))
+                .lineToY(10)
+                //.splineToConstantHeading(new Vector2d(30,10), Math.toRadians(90))
+                .waitSeconds(0.3)
+                .lineToY(55)
+                .splineToConstantHeading(new Vector2d(45, 55), Math.toRadians(90))
+                //.splineToConstantHeading(new Vector2d(45,10), Math.toRadians(90))
+                .lineToY(10)
+                //.splineToConstantHeading(new Vector2d(45, 55), Math.toRadians(90))
+                .lineToY(55)
+                .turn(Math.toRadians(5))
+                .splineToConstantHeading(new Vector2d(50,55),Math.toRadians(90))
+                .lineToY(10)
 
                 .build();
 

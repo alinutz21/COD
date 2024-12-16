@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
 @Deprecated
 @Config
 public class Outake3 {
-    public Slide slide;
+    public SlidePiese slide;
     public Servo liftServo;
     public Servo specimenServo;
     ElapsedTime liftTimer = new ElapsedTime();
@@ -55,7 +55,7 @@ public class Outake3 {
 
 
     public void init(HardwareMap hardwareMap){
-        slide = new Slide(hardwareMap,"LIFTMOTOR",true,false);
+        slide = new SlidePiese(hardwareMap,"LIFTMOTOR",true,false);
         liftServo = hardwareMap.get(Servo.class,"LIFTSERVO");
         specimenServo = hardwareMap.get(Servo.class,"SPECIMENSERVO");
         liftServo.setPosition(DEPOSIT_IDLE);

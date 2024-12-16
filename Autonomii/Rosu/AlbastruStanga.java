@@ -8,14 +8,14 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.COD.RR.MecanumDrive;
-import org.opencv.core.Mat;
-
+@Disabled
 @Config
-@Autonomous(name = "\uD83D\uDD35 DREAPTA", group = "Autonomous")
-public class AlbastruDreapta extends LinearOpMode {
+@Autonomous(name = "Rosu STANGA", group = "Autonomous")
+public class AlbastruStanga extends LinearOpMode {
     /*  public class Lift {
           private Slide sli
 
@@ -108,9 +108,19 @@ public class AlbastruDreapta extends LinearOpMode {
                 .waitSeconds(0.1);
 
         Action trajectoryActionCloseOut = tab1.endTrajectory().fresh()
-                .splineToConstantHeading(new Vector2d(50,15), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-5,45), Math.toRadians(90))
+                .turn(Math.toRadians(-20))
+                .lineToY(7)
+                .turn(Math.toRadians(25))
+                .splineToConstantHeading(new Vector2d(-10,45), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-25,50), Math.toRadians(90))
+                .lineToY(5)
+                .turn(Math.toRadians(-3))
+                .lineToY(50)
+                .splineToConstantHeading(new Vector2d(-29,50), Math.toRadians(90))
+                .lineToY(10)
+                .lineToY(30)
                 .build();
-
         // actions that need to happen on init; for instance, a claw tightening.
         //    Actions.runBlocking(claw.closeClaw());
 

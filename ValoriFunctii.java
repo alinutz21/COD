@@ -11,8 +11,8 @@ public class ValoriFunctii {
      */
     public final double EXT_HOME = 0.75; // pozitia lui normala
     public final double EXT_EXTENDED = 0.99; // pozitia lui cand este extins
-    public final double DMP_INTAKE_SIDE = 0.03;
-    public final double DMP_SCORING_SIDE = 0.95;
+    public final double DMP_INTAKE_SIDE = 0;
+    public final double DMP_SCORING_SIDE = 0.97;
 
     // TIMPUL ALOCAT PENTRU CA SERVO-UL SA PUNA PIESA IN COS
     public final double RETURN_TIME = 0.5;
@@ -34,7 +34,7 @@ public class ValoriFunctii {
     /*
      *   VALORILE PENTRU SERVO-UL CARE DEPOZITEAZA
      */
-    public final double DEPOSIT_IDLE = 0.45; // pozitia lui normala
+    public final double DEPOSIT_IDLE = 0.40; // pozitia lui normala
     public final double DEPOSIT_SCORING = 0.15; // pozitia lui cand arunca piesa
     public final double DEPOZIT_HORIZONTAL = 0.30;
     // TIMPUL ALOCAT PENTRU CA SERVO-UL SA PUNA PIESA IN COS
