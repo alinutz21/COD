@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @Disabled
-@Config
 @TeleOp(name = "Hang Tunning",group = "Tunning")
 public class Hang_Tunning extends LinearOpMode {
     public DcMotorEx hang1Motor;

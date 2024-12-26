@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.COD.IndTeleops;
+package org.firstinspires.ftc.teamcode.COD.TeleopIndividuale;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -6,27 +6,28 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
-
-import org.firstinspires.ftc.teamcode.COD.Subsystems.Hang;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.Intake;
+
 @Disabled
-@TeleOp(name="Hang Subsytem", group="Subsisteme")
-public class HangTeleop extends LinearOpMode {
-    Gamepad gp;
-    Hang hang = null;
+@TeleOp(name="Preluare piese", group="Subsisteme")
+public class PreluarePiese extends LinearOpMode {
+    Gamepad gp2;
+    Intake intake = null;
 
     @Override
     public void runOpMode(){
-        hang = new Hang();
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+        intake = new Intake();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        hang.init(hardwareMap);
-        gp = gamepad1;
+        intake.init(hardwareMap);
+        gp2 = gamepad2;
 
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            hang.Loop(gp,telemetry);
+            intake.Loop(gp2);
         }
     }
 }

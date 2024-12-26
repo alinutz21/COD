@@ -49,7 +49,7 @@ public class Intake {
         activeIntakeServo = hardwareMap.get(CRServo.class,"WHEELSERVO");
 
         bendOverServo = hardwareMap.get(Servo.class,"ROTATESERVO");
-        bendOverServo.setPosition(DMP_INTAKE_SIDE);
+  //      bendOverServo.setPosition(DMP_INTAKE_SIDE);
 
         liftServo = hardwareMap.get(Servo.class,"LIFTSERVO");
         SetState(State.HOME);

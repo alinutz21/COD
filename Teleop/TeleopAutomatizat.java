@@ -9,13 +9,13 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.HangV2;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.COD.Subsystems.Outake;
+import org.firstinspires.ftc.teamcode.COD.Subsystems.Outake3;
 
-@TeleOp(name="TELE OP", group="Linear OpMode")
-public class Teleop extends LinearOpMode {
+@TeleOp(name="TELE OP AUTOMATIZAT ** IN TESTE", group="Linear OpMode")
+public class TeleopAutomatizat extends LinearOpMode {
     Gamepad gp1,gp2;
     Drivetrain drivetrain;
-    Outake outtake;
+    Outake3 outtake;
     Intake intake;
     HangV2 hang;
 
@@ -23,7 +23,7 @@ public class Teleop extends LinearOpMode {
     public void runOpMode(){
         telemetry.addLine("RUBIX NR1");
         telemetry.update();
-        outtake = new Outake();
+        outtake = new Outake3();
         intake = new Intake();
         drivetrain = new Drivetrain();
         hang = new HangV2();

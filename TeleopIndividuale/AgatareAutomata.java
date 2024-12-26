@@ -1,32 +1,31 @@
-package org.firstinspires.ftc.teamcode.COD.IndTeleops;
+package org.firstinspires.ftc.teamcode.COD.TeleopIndividuale;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.COD.Subsystems.Drivetrain;
-
-
-@TeleOp(name="Drivetrain Subsystem", group="Subsisteme")
-public class DrivetrainTeleop extends LinearOpMode {
-    Gamepad gp1;
-    Drivetrain drivetrain;
+import org.firstinspires.ftc.teamcode.COD.Subsystems.HangV2;
+@Disabled
+@TeleOp(name="Agatare Automata", group="Subsisteme")
+public class AgatareAutomata extends LinearOpMode {
+    Gamepad gp;
+    HangV2 hang = null;
 
     @Override
     public void runOpMode(){
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-        drivetrain = new Drivetrain();
+        hang = new HangV2();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        drivetrain.init(hardwareMap);
-        gp1 = gamepad1;
+
+        hang.init(hardwareMap);
+        gp = gamepad1;
 
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            drivetrain.Loop(gp1);
+            hang.Loop(gp,telemetry);
         }
     }
 }

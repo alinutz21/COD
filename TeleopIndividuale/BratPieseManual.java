@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.COD.IndTeleops;
+package org.firstinspires.ftc.teamcode.COD.TeleopIndividuale;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -10,11 +10,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import org.firstinspires.ftc.teamcode.COD.Subsystems.Intake;
+
 @Disabled
 @Config
-@TeleOp(name="outtake_sus", group="Subsisteme")
-public class outtake_sus extends LinearOpMode {
+@TeleOp(name="Brat Piese Manual", group="Subsisteme")
+public class BratPieseManual extends LinearOpMode {
     Gamepad gp2;
     public DcMotorEx motor;
     public String numeMotor = "LIFTMOTOR";

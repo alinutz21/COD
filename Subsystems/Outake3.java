@@ -8,10 +8,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
-@Deprecated
+
 @Config
 public class Outake3 {
-    public SlidePiese slide;
+    public SlidePiese2 slide;
     public Servo liftServo;
     public Servo specimenServo;
     ElapsedTime liftTimer = new ElapsedTime();
@@ -34,11 +34,11 @@ public class Outake3 {
     /*
      *  VALORILE PENTRU BRATUL DE RIDICARE
      */
-    final int LIFT_HOME = valori.LIFT_DOWN; // pozitia de jos
-    final int LIFT_BASKET1 = valori.LIFT_BASKET1; // pozitia de sus
-    final int LIFT_BASKET2 = valori.LIFT_BASKET2; // pozitia de sus
-    final int LIFT_SPECIMEN1 = valori.LIFT_SPECIMEN1; // pozitia de sus
-    final int LIFT_SPECIMEN2 = valori.LIFT_SPECIMEN2; // pozitia de sus
+    final double LIFT_HOME = valori.LIFT_DOWN; // pozitia de jos
+    final double LIFT_BASKET1 = valori.LIFT_BASKET1; // pozitia de sus
+    final double LIFT_BASKET2 = valori.LIFT_BASKET2; // pozitia de sus
+    final double LIFT_SPECIMEN1 = valori.LIFT_SPECIMEN1; // pozitia de sus
+    final double LIFT_SPECIMEN2 = valori.LIFT_SPECIMEN2; // pozitia de sus
 
     /*
      *   VALORILE PENTRU SERVO-UL CARE DEPOZITEAZA
@@ -53,51 +53,68 @@ public class Outake3 {
     final double SPECIMEN_OPEN = valori.SPECIMEN_OPEN;
     final double SPECIMEN_CLOSED = valori.SPECIMEN_CLOSED;
 
+    boolean auto = false;
+
 
     public void init(HardwareMap hardwareMap){
-        slide = new SlidePiese(hardwareMap,"LIFTMOTOR",true,false);
+        slide = new SlidePiese2(hardwareMap,"LIFTMOTOR",true,false);
         liftServo = hardwareMap.get(Servo.class,"LIFTSERVO");
         specimenServo = hardwareMap.get(Servo.class,"SPECIMENSERVO");
         liftServo.setPosition(DEPOSIT_IDLE);
         // specimenServo.setPosition(0.6);
         liftTimer.reset();
         liftTimerSpecimen.reset();
+        auto = false;
         currentState = State.GROUND;
     }
 
  //   public void SetState(State state) { currentState = state;}
-    public void Loop(Gamepad gp1, Gamepad gp2, Telemetry telemetry) {
+    public void Loop(Gamepad gp, Gamepad gp2,Telemetry telemetry) {
+        if(gp2.x){
+            slide.setPosition(30,VITEZA_MAXIMA_URCARE);
+            /*
+            liftServo.setPosition(DEPOSIT_IDLE);
+            specimenServo.setPosition(SPECIMEN_CLOSED);
+            slide.setPosition(LIFT_HOME,VITEZA_MAXIMA_COBORARE);
+            currentState = State.GROUND;
 
-
+             */
+            currentState = State.GROUND;
+        }
 
         switch (currentState){
             case GROUND:
-                if(gp2.x){
+                /// BASKETI
+                if(gp.x){
                     slide.setPosition(LIFT_BASKET1,VITEZA_MAXIMA_URCARE);
                     currentState = State.EXTEND_BASKET;
+                    liftServo.setPosition(valori.DEPOZIT_HORIZONTAL);
                 }
-                if(gp2.y){
+                if(gp.y){
                     slide.setPosition(LIFT_BASKET2,VITEZA_MAXIMA_URCARE);
                     currentState = State.EXTEND_BASKET;
+                    liftServo.setPosition(valori.DEPOZIT_HORIZONTAL);
                 }
-                if(gp2.a){
+
+                /// SPECIMENE
+                if(gp.a){
+                    auto = true;
                     slide.setPosition(LIFT_SPECIMEN1,VITEZA_MAXIMA_URCARE);
                     currentState = State.EXTEND_SPECIMEN;
                 }
-                if(gp2.b){
+                if(gp.b){
+                    auto = true;
                     slide.setPosition(LIFT_SPECIMEN2,VITEZA_MAXIMA_URCARE);
                     currentState = State.EXTEND_SPECIMEN;
                 }
                 break;
 
             case EXTEND_BASKET:
-                if(slide.isOnTarget(3)) {
+                if(gp.y){
                     liftServo.setPosition(DEPOSIT_SCORING);
-                    liftTimer.reset();
                     currentState = State.DUMP_BASKET;
                 }
                 break;
-
             case EXTEND_SPECIMEN:
                 if(slide.isOnTarget(2)){
                     liftTimer.reset();
@@ -105,22 +122,27 @@ public class Outake3 {
                 }
                 break;
             case DUMP_BASKET:
-                if(liftTimer.seconds() >= DUMP_BASKET_TIME){
+                if(gp.y){
                     liftServo.setPosition(DEPOSIT_IDLE);
                     slide.setPosition(LIFT_HOME,VITEZA_MAXIMA_COBORARE);
                     currentState = State.RETRACT;
                 }
                 break;
             case DUMP_SPECIMEN:
-                if(gp2.dpad_left || liftTimer.seconds() >= DUMP_SPECIMEN_TIME){
+                if(gp.dpad_left){
                     slide.setPosition(LIFT_HOME,0.3);
                     liftTimerSpecimen.reset();
                     currentState = State.DUMPED_SPECIMEN;
                 }
+                if(liftTimer.seconds() >= DUMP_SPECIMEN_TIME){
+                    slide.setPosition(LIFT_HOME,VITEZA_MAXIMA_COBORARE);
+                    currentState = State.GROUND;
+                }
                 break;
             case DUMPED_SPECIMEN:
-                if(slide.isOnTarget(3) || liftTimerSpecimen.seconds() >= 0.1){
+                if(slide.isOnTarget(5) || liftTimerSpecimen.seconds() >= 0.1){
                     specimenServo.setPosition(SPECIMEN_OPEN);
+                    auto = false;
                     currentState = State.RETRACT;
                 }
                 break;
@@ -132,15 +154,15 @@ public class Outake3 {
             default:
                 currentState = State.GROUND;
         }
-        if(gp2.dpad_down && currentState != State.GROUND){
+        if(gp.left_bumper && currentState != State.GROUND){
+            liftServo.setPosition(DEPOSIT_IDLE);
+            specimenServo.setPosition(SPECIMEN_CLOSED);
             slide.setPosition(LIFT_HOME,VITEZA_MAXIMA_COBORARE);
-            currentState = State.RETRACT;
+            currentState = State.GROUND;
         }
-
-
-        if(gp1.dpad_left) // deschide
+        if(gp.dpad_left || !auto) // deschid
             specimenServo.setPosition(SPECIMEN_OPEN);
-        if(gp1.dpad_right)
+        if(gp.dpad_right)
             specimenServo.setPosition(SPECIMEN_CLOSED);
         slide.slideUpdate();
         telemetry.addData("pozitie curenta",slide.getPosition());

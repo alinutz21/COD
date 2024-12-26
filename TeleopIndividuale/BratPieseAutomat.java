@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.COD.IndTeleops;
+package org.firstinspires.ftc.teamcode.COD.TeleopIndividuale;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -8,14 +8,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.COD.Subsystems.Outake;
-import org.firstinspires.ftc.teamcode.COD.Subsystems.Outake2;
+
 @Disabled
-@TeleOp(name="Outake Subsystem", group="Subsisteme")
-public class OutakeTeleop extends LinearOpMode {
+@TeleOp(name="Brat Piese Automat", group="Subsisteme")
+public class BratPieseAutomat extends LinearOpMode {
     Gamepad gp1,gp2;
     Outake outake;
-
-
 
     @Override
     public void runOpMode(){
@@ -32,7 +30,6 @@ public class OutakeTeleop extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             outake.Loop(gp2,telemetry);
-            telemetry.update();
         }
     }
 }

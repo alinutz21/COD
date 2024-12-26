@@ -14,7 +14,7 @@ public class SlideLift
     // Slide characterization constants.
 
     // KP specifies the Proportional PID coefficient in PIDF.
-    public static double KP = 0.0;
+    public static double KP = 0.006;
 
     // KI specifies the Integral PID coefficient in PIDF.
     public static double KI = 0.0;
@@ -23,19 +23,19 @@ public class SlideLift
     public static double KD = 0.0;
 
     // KF specifies the slide holding power at any height.
-    public static double KF = 0.0;
+    public static double KF = 0.6;
 
     // ZERO_OFFSET specifies the slide extension length in inches at resting position (usually 0.0).
     public static double ZERO_OFFSET = 0.0;
 
     // MIN_POS specifies the slide extension length in inches at its minimum position (usually the same as ZERO_OFFSET).
-    private static final double MIN_POS = ZERO_OFFSET;
+    private static final double MIN_POS = -5;
 
     // MAX_POS specifies the slide extension length in inches at its maximum position.
-    private static final double MAX_POS = 100;
+    private static final double MAX_POS = 20;
 
     // TICKS_PER_INCH specifies the scaling factor to translate slide extension length in inches to encoder ticks.
-    private static final double TICKS_PER_INCH = 0.0;
+    private static final double TICKS_PER_INCH = 118.67;
 
     // Slide subsystem components.
     private final DcMotorEx leftMotor, rightMotor;
@@ -180,4 +180,9 @@ public class SlideLift
     {
         return ticksToRealWorldInches(leftMotor.getCurrentPosition());
     }
+
+    public double GetPowers(){
+        return leftMotor.getPower();
+    }
+
 }

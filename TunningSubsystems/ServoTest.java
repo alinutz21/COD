@@ -9,11 +9,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
-@TeleOp(name = "Servo test",group = "Tests")
+@TeleOp(name = "Modificat servo-uri",group = "Tests")
 public class ServoTest extends LinearOpMode {
 
-    public static double pozitie = 0.75;
-    public static String numeServo = "EXTENSIONSERVO";
+    public static double pozitie = 0.5;
+    public static String numeServo = "";
     private Servo servo;
     @Override
     public void runOpMode(){

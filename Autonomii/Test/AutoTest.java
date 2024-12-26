@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.COD.Autonomii.Test;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -12,10 +13,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.COD.RR.MecanumDrive;
-import org.firstinspires.ftc.teamcode.COD.Subsystems.Slide;
+import org.firstinspires.ftc.teamcode.COD.Subsystems.SlidePiese;
 import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
 
-@Autonomous(name="LeftAuto")
+@Config
+@Autonomous(name = "nuPORNIINMECI", group = "AutoSimplu")
 public class AutoTest extends LinearOpMode{
     double powerLimit = 0.5;
     double target = 0;
@@ -24,9 +26,9 @@ public class AutoTest extends LinearOpMode{
     double clawClose = valori.SPECIMEN_CLOSED;
 
     public class Lift {
-        public Slide slide;
+        public SlidePiese slide;
         public Lift(HardwareMap hardwareMap){
-            slide = new Slide(hardwareMap,"LIFTMOTOR",true,false);
+            slide = new SlidePiese(hardwareMap,"LIFTMOTOR",true,false);
             slide.setPosition(0,0);
         }
         public void update() {
@@ -56,6 +58,9 @@ public class AutoTest extends LinearOpMode{
 
         telemetry.addData("Mode", "waiting");
         telemetry.update();
+
+        // Actiuni care au loc in init
+
         waitForStart();
 
         telemetry.addData("Mode", "running");
@@ -67,24 +72,11 @@ public class AutoTest extends LinearOpMode{
                         (p) -> {AutoLift.update(); return true;},
                         new SequentialAction(
                                 (p) -> {AutoClaw.setServo(clawOpen); return false;},
-
                                 drive.actionBuilder(initialPose)
                                         .waitSeconds(.3)
                                         .strafeToLinearHeading(new Vector2d(0,17),Math.toRadians(0))
                                         .build(),
                                 (p) -> {target = valori.LIFT_BASKET1; return false;},
-                                /*
-                                drive.actionBuilder(new Pose2d(10,17,Math.toRadians(-34)))
-                                        .waitSeconds(1)
-                                        .build(),
-                                drive.actionBuilder(new Pose2d(10,17,Math.toRadians(-34)))
-                                        .waitSeconds(1)
-                                        .build(),
-                                drive.actionBuilder(new Pose2d(10,17,Math.toRadians(-34)))
-                                        .strafeToLinearHeading(new Vector2d(14.4,11),Math.toRadians(-10))
-                                        .build(),
-
-                                 */
                                 drive.actionBuilder(drive.pose)
                                         .waitSeconds(0.55)
                                         .strafeToConstantHeading(new Vector2d(0,10))

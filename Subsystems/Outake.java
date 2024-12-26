@@ -35,7 +35,7 @@ public class Outake {
         slide = new SlidePiese(hardwareMap,"LIFTMOTOR",true,false);
         liftServo = hardwareMap.get(Servo.class,"LIFTSERVO");
         specimenServo = hardwareMap.get(Servo.class,"SPECIMENSERVO");
-        liftServo.setPosition(valori.DEPOSIT_IDLE);
+    //    liftServo.setPosition(valori.DEPOSIT_IDLE);
         dumpTimer.reset();
     }
     double prevSlidePower = 0.0;
@@ -60,12 +60,12 @@ public class Outake {
         if(gp2.y){
             liftServo.setPosition(DEPOSIT_SCORING);
         }
-        slide.slideUpdate();
+
         if(gp2.dpad_left) // deschide
             specimenServo.setPosition(SPECIMEN_OPEN);
         if(gp2.dpad_right) // inchide
             specimenServo.setPosition(SPECIMEN_CLOSED);
 
-
+        slide.slideUpdate();
     }
 }
