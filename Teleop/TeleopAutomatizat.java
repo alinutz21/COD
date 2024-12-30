@@ -10,11 +10,12 @@ import org.firstinspires.ftc.teamcode.COD.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.HangV2;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.Outake3;
+import org.firstinspires.ftc.teamcode.COD.Subsystems.SmoothDrivetrain;
 
 @TeleOp(name="TELE OP AUTOMATIZAT ** IN TESTE", group="Linear OpMode")
 public class TeleopAutomatizat extends LinearOpMode {
     Gamepad gp1,gp2;
-    Drivetrain drivetrain;
+    SmoothDrivetrain drivetrain;
     Outake3 outtake;
     Intake intake;
     HangV2 hang;
@@ -25,7 +26,7 @@ public class TeleopAutomatizat extends LinearOpMode {
         telemetry.update();
         outtake = new Outake3();
         intake = new Intake();
-        drivetrain = new Drivetrain();
+        drivetrain = new SmoothDrivetrain();
         hang = new HangV2();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         drivetrain.init(hardwareMap);
@@ -41,7 +42,7 @@ public class TeleopAutomatizat extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             drivetrain.Loop(gp1);
             intake.Loop(gp2);
-            outtake.Loop(gp2,telemetry);
+            outtake.Loop(gp1,gp2,telemetry);
             hang.Loop(gp1,telemetry);
         }
     }

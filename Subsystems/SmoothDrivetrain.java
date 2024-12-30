@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.COD.RR.MecanumDrive;
 
 @Config
-public class Drivetrain {
+public class SmoothDrivetrain {
 
     public MecanumDrive drive;
     public Pose2d pose;
@@ -31,8 +31,8 @@ public class Drivetrain {
 
         drive.setDrivePowers(new PoseVelocity2d(
                 new Vector2d(
-                        (gp.right_trigger - gp.left_trigger * 0.65),
-                        -gp.left_stick_x * 0.75
+                        -0.48 * Math.tan(1.12 * gp.left_stick_y),
+                        -0.48 * Math.tan(1.12 * gp.left_stick_x)
                 ),
                 -gp.right_stick_x
         ));

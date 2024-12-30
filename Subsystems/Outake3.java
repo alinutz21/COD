@@ -69,15 +69,14 @@ public class Outake3 {
     }
 
  //   public void SetState(State state) { currentState = state;}
-    public void Loop(Gamepad gp, Gamepad gp2,Telemetry telemetry) {
-        if(gp2.x){
+    public void Loop(Gamepad gp1, Gamepad gp,Telemetry telemetry) {
+        if(gp1.x){
             slide.setPosition(30,VITEZA_MAXIMA_URCARE);
             /*
             liftServo.setPosition(DEPOSIT_IDLE);
             specimenServo.setPosition(SPECIMEN_CLOSED);
             slide.setPosition(LIFT_HOME,VITEZA_MAXIMA_COBORARE);
             currentState = State.GROUND;
-
              */
             currentState = State.GROUND;
         }
