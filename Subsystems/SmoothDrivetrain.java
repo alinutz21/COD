@@ -28,7 +28,6 @@ public class SmoothDrivetrain {
 
 
     public void Loop(Gamepad gp){
-
         drive.setDrivePowers(new PoseVelocity2d(
                 new Vector2d(
                         -0.48 * Math.tan(1.12 * gp.left_stick_y),

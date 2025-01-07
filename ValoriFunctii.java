@@ -27,7 +27,7 @@ public class ValoriFunctii {
     public final double VITEZA_MAXIMA_COBORARE = 0.3;
     public final double LIFT_DOWN = 0.5; // pozitia de jos
     public final double LIFT_BASKET1 = 50; // pozitia de sus
-    public final double LIFT_BASKET2 = 70;
+    public final double LIFT_BASKET2 = 84;
     public final double LIFT_SPECIMEN1 = 30; // pozitia de sus
     public final double LIFT_SPECIMEN2 = 60; // pozitia de sus
     /*
