@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.COD.Subsystems;
+package org.firstinspires.ftc.teamcode.COD.Subsystems.Depracated;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -7,10 +7,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
-import org.opencv.features2d.BRISK;
 
-import kotlin.contracts.ReturnsNotNull;
-
+@Deprecated
 @Config
 public class Intake {
     public Servo extensionServo;
@@ -25,6 +23,9 @@ public class Intake {
         HOME,
         EXTEND,
         INTAKE,
+        SPECIMENIN,
+        SPECIMENOUT,
+        ENEMY,
         RETRACT,
         RETURNING
     }
@@ -44,7 +45,7 @@ public class Intake {
     public void init(HardwareMap hardwareMap){
 
         extensionServo = hardwareMap.get(Servo.class,"EXTENSIONSERVO");
-        extensionServo.setPosition(EXT_HOME);
+//        extensionServo.setPosition(EXT_HOME);
 
         activeIntakeServo = hardwareMap.get(CRServo.class,"WHEELSERVO");
 
@@ -53,6 +54,9 @@ public class Intake {
 
         liftServo = hardwareMap.get(Servo.class,"LIFTSERVO");
         SetState(State.HOME);
+        //bendOverServo.setPosition(4);
+        //liftServo.setPosition(0);
+
     }
 
     public void SetState(State state) { currentState = state;}
@@ -80,16 +84,24 @@ public class Intake {
                     currentState = State.RETRACT;
                 }
                 break;
+//            case SPECIMENIN:
+//                if(gp.right_bumper){
+//                    bendOverServo.setPosition(0.4);
+//                    extensionServo.setPosition(EXT_HOME);
+//                    activeIntakeServo.setPower(0);
+//                }
+//                break;
             case RETRACT:
                 if(returnHomeTime.seconds() >= RETURN_TIME){
-                    activeIntakeServo.setPower(-0.3);
+                    activeIntakeServo.setPower(-1);
                     returnHomeTime.reset();
                     currentState = State.RETURNING;
                 }
                 break;
             case RETURNING:
-                if(returnHomeTime.seconds() >= 1.5){
+                if(returnHomeTime.seconds() >= 1){
                     activeIntakeServo.setPower(0);
+                    bendOverServo.setPosition(0.35);
                     currentState = State.HOME;
                 }
                 break;

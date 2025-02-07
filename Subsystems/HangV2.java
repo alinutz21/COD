@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode.COD.Subsystems;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
 public class HangV2 {
+
     public SlideLift hang;
     public static double target  = -1;
 

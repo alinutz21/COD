@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.COD.Subsystems;
+package org.firstinspires.ftc.teamcode.COD.Subsystems.Depracated;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -7,16 +7,22 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.COD.Subsystems.SlidePieseAutonomie;
 import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
 
+@Deprecated
 @Config
 public class Outake3 {
-    public SlidePiese2 slide;
+    public SlidePieseAutonomie slide;
+
     public Servo liftServo;
     public Servo specimenServo;
     ElapsedTime liftTimer = new ElapsedTime();
     ElapsedTime liftTimerSpecimen = new ElapsedTime();
+
     public ValoriFunctii valori = new ValoriFunctii();
+
+    public double target = 0;
     public enum State {
         GROUND,
         EXTEND_BASKET,
@@ -57,7 +63,7 @@ public class Outake3 {
 
 
     public void init(HardwareMap hardwareMap){
-        slide = new SlidePiese2(hardwareMap,"LIFTMOTOR",true,false);
+        slide = new SlidePieseAutonomie(hardwareMap,"LIFTMOTOR",true,false);
         liftServo = hardwareMap.get(Servo.class,"LIFTSERVO");
         specimenServo = hardwareMap.get(Servo.class,"SPECIMENSERVO");
         liftServo.setPosition(DEPOSIT_IDLE);
@@ -161,8 +167,12 @@ public class Outake3 {
         }
         if(gp.dpad_left || !auto) // deschid
             specimenServo.setPosition(SPECIMEN_OPEN);
-        if(gp.dpad_right)
+
+        if(gp.dpad_right){
+//            target = 5;
             specimenServo.setPosition(SPECIMEN_CLOSED);
+        }
+
         slide.slideUpdate();
         telemetry.addData("pozitie curenta",slide.getPosition());
         telemetry.addData("Timp",liftTimer.seconds());

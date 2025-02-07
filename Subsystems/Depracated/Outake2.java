@@ -1,8 +1,7 @@
-package org.firstinspires.ftc.teamcode.COD.Subsystems;
+package org.firstinspires.ftc.teamcode.COD.Subsystems.Depracated;
 
 import com.acmerobotics.dashboard.config.Config;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -48,7 +47,6 @@ public class Outake2 {
         specimenServo = hardwareMap.get(Servo.class,"SPECIMENSERVO");
         liftServo.setPosition(DEPOSIT_IDLE);
         dumpTimer.reset();
-
     }
 
     public void Loop(Gamepad gp2, Telemetry telemetry) {

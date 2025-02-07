@@ -8,14 +8,15 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.COD.RR.MecanumDrive;
-import org.firstinspires.ftc.teamcode.COD.Subsystems.SlidePiese;
+import org.firstinspires.ftc.teamcode.COD.Subsystems.SlidePieseTeleop;
 import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
-
+@Disabled
 @Config
 @Autonomous(name = "nuPORNIINMECI", group = "AutoSimplu")
 public class AutoTest extends LinearOpMode{
@@ -26,9 +27,9 @@ public class AutoTest extends LinearOpMode{
     double clawClose = valori.SPECIMEN_CLOSED;
 
     public class Lift {
-        public SlidePiese slide;
+        public SlidePieseTeleop slide;
         public Lift(HardwareMap hardwareMap){
-            slide = new SlidePiese(hardwareMap,"LIFTMOTOR",true,false);
+            slide = new SlidePieseTeleop(hardwareMap,"LIFTMOTOR",true,false);
             slide.setPosition(0,0);
         }
         public void update() {

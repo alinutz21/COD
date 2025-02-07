@@ -24,14 +24,16 @@ public class SmoothDrivetrain {
     public void init(HardwareMap hardwareMap){
         pose = new Pose2d(0,0, Math.toRadians(0));
         drive = new MecanumDrive(hardwareMap,pose);
+
     }
 
 
     public void Loop(Gamepad gp){
+
         drive.setDrivePowers(new PoseVelocity2d(
                 new Vector2d(
-                        -0.48 * Math.tan(1.12 * gp.left_stick_y),
-                        -0.48 * Math.tan(1.12 * gp.left_stick_x)
+                        -0.48 * Math.tan(1.12 *-( gp.right_trigger - gp.left_trigger * 0.9)),
+                        -0.48 * Math.tan(1.12 * gp.left_stick_x * 0.8)
                 ),
                 -gp.right_stick_x
         ));

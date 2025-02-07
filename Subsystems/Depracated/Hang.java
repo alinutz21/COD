@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.COD.Subsystems;
+package org.firstinspires.ftc.teamcode.COD.Subsystems.Depracated;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;

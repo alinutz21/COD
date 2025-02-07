@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 
 
 @Config
-public class SlidePiese
+public class SlidePieseTeleop
 {
     // Constante pentru caracterizarea alunecării (Slide characterization).
 
@@ -34,7 +34,7 @@ public class SlidePiese
     private static final double ZERO_OFFSET = 0.0;
 
     // MIN_POS specifică lungimea extensiei alunecării în inci în poziția sa minimă (de obicei aceeași cu ZERO_OFFSET).
-    private static final double MIN_POS = -0.5;
+    private static final double MIN_POS = -9;
 
     // MAX_POS specifică lungimea extensiei alunecării în inci în poziția sa maximă.
     private static final double MAX_POS = 100;
@@ -60,7 +60,7 @@ public class SlidePiese
      * @param brakeEnabled specifică true pentru a activa modul de frână al motorului, false pentru a activa modul de coastă.
 
      */
-    public SlidePiese(HardwareMap hardwareMap, String leftMotorName, boolean leftMotorInverted, boolean brakeEnabled)
+    public SlidePieseTeleop(HardwareMap hardwareMap, String leftMotorName, boolean leftMotorInverted, boolean brakeEnabled)
     {
         // Creează motoarele de alunecare și le initializează.
         leftMotor = hardwareMap.get(DcMotorEx.class, leftMotorName);
@@ -78,7 +78,7 @@ public class SlidePiese
 
         this.targetPosInInches = ZERO_OFFSET;
         this.revPowerLimit = -0.5;
-        this.fwdPowerLimit = 0.7;
+        this.fwdPowerLimit = 0.7; //0.7
     }
 
     /**
@@ -174,6 +174,9 @@ public class SlidePiese
      *
      * @return poziția alunecării în inci.
      */
+    public double getPower(){
+        return leftMotor.getPower();
+    }
     public double getPosition()
     {
         //return leftMotor.getCurrentPosition();

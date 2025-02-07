@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 
 
 @Config
-public class SlidePiese2
+public class SlidePieseAutonomie
 {
     // Constante pentru caracterizarea alunecării (Slide characterization).
 
@@ -60,7 +60,7 @@ public class SlidePiese2
      * @param brakeEnabled specifică true pentru a activa modul de frână al motorului, false pentru a activa modul de coastă.
 
      */
-    public SlidePiese2(HardwareMap hardwareMap, String leftMotorName, boolean leftMotorInverted, boolean brakeEnabled)
+    public SlidePieseAutonomie(HardwareMap hardwareMap, String leftMotorName, boolean leftMotorInverted, boolean brakeEnabled)
     {
         // Creează motoarele de alunecare și le initializează.
         leftMotor = hardwareMap.get(DcMotorEx.class, leftMotorName);

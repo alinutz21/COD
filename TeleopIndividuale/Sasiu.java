@@ -7,19 +7,19 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.COD.Subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.COD.Subsystems.SmoothDrivetrain;
 
 @Disabled
 @TeleOp(name="Sasiu", group="Subsisteme")
 public class Sasiu extends LinearOpMode {
     Gamepad gp1;
-    Drivetrain drivetrain;
+    SmoothDrivetrain drivetrain;
 
     @Override
     public void runOpMode(){
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        drivetrain = new Drivetrain();
+        drivetrain = new SmoothDrivetrain() ;
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         drivetrain.init(hardwareMap);
         gp1 = gamepad1;

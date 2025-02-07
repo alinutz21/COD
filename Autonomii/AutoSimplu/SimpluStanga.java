@@ -7,12 +7,14 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.COD.RR.MecanumDrive;
 /*
     DUCE TOATE SAMPLE-URILE GALBENE IN NET ZONE: 12 P si apoi se parcheaza
  */
+@Disabled
 @Config
 @Autonomous(name = "STANGA Simplu", group = "AutoSimplu")
 public class SimpluStanga extends LinearOpMode {
