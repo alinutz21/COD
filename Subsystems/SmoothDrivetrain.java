@@ -32,8 +32,8 @@ public class SmoothDrivetrain {
 
         drive.setDrivePowers(new PoseVelocity2d(
                 new Vector2d(
-                        -0.48 * Math.tan(1.12 *-( gp.right_trigger - gp.left_trigger * 0.9)),
-                        -0.48 * Math.tan(1.12 * gp.left_stick_x * 0.8)
+                        -0.48 * Math.tan(1.12 *-( gp.right_trigger - gp.left_trigger)),
+                        -0.48 * Math.tan(1.12 * gp.left_stick_x) // * 0.8
                 ),
                 -gp.right_stick_x
         ));

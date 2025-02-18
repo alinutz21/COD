@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.COD.Subsystems;
 
+import android.sax.StartElementListener;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -71,9 +73,7 @@ public class LazyIntake {
                     extensionServo.setPosition(EXT_EXTENDED);
                     currentState = State.BO_DOWN;
                 }
-                if(gp.right_bumper){
-                    bendOverServo.setPosition(valori.DMP_INTAKE_SIDE);
-                }
+
                 break;
             case BO_DOWN:
                 if(gp.x){
@@ -147,18 +147,20 @@ public class LazyIntake {
                 }
                 break;
             case RETURNING:
-                if(returnHomeTimer.seconds() >= 2 || firstTime || gp.b){
-                    firstTime = false;
-                    activeIntakeServo.setPower(0);
-                    bendOverServo.setPosition(DMP_90DEGREES);
-                    extensionServo.setPosition(EXT_HOME);
-                    currentState = State.HOME;
-                }
+               // if(returnHomeTimer.seconds() >= 2 || firstTime || gp.b){
+                if(firstTime || gp.b){
+                        firstTime = false;
+                        activeIntakeServo.setPower(0);
+                        bendOverServo.setPosition(DMP_90DEGREES);
+                        extensionServo.setPosition(EXT_HOME);
+                        currentState = State.HOME;
+                    }
+
                 break;
             default:
                 currentState = State.HOME;
         }
-        if(gp.right_bumper){
+        if(gp.left_bumper){
             bendOverServo.setPosition(valori.DMP_INTAKE_SIDE);
         }
 
@@ -169,6 +171,14 @@ public class LazyIntake {
             extensionServo.setPosition(EXT_HOME);
             activeIntakeServo.setPower(0);
             currentState = State.HOME;
+        }
+        if(currentState == State.RETURNING || currentState == State.SAMPLE_STANDBY){
+            if(gp.x) {
+                extensionServo.setPosition(EXT_EXTENDED);
+                bendOverServo.setPosition(DMP_SCORING_SIDE);
+                liftServo.setPosition(valori.DEPOSIT_IDLE);
+                currentState = State.EXTENDING;
+            }
         }
     }
 

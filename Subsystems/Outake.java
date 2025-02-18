@@ -14,6 +14,14 @@ public class Outake {
     public SlidePieseTeleop slide;
     public Servo liftServo;
     public Servo specimenServo;
+    public enum State {
+        HOME,
+        GOIN_UP,
+        UP,
+        GOING_UPPER,
+        UPPER,
+    }
+    State currentState = State.HOME;
     ElapsedTime closeGripperTimer = new ElapsedTime();
 
     public ValoriFunctii valori = new ValoriFunctii();
@@ -22,6 +30,7 @@ public class Outake {
     final double SPECIMEN_OPEN = valori.SPECIMEN_OPEN;
     final double SPECIMEN_CLOSED = valori.SPECIMEN_CLOSED;
     boolean prevDpadRightPressed = false;
+    boolean manualMode = false;
 
     public void init(HardwareMap hardwareMap){
         slide = new SlidePieseTeleop(hardwareMap,"LIFTMOTOR",true,false);
@@ -29,28 +38,22 @@ public class Outake {
         specimenServo = hardwareMap.get(Servo.class,"SPECIMENSERVO");
     //    liftServo.setPosition(valori.DEPOSIT_IDLE);
         closeGripperTimer.reset();
+        currentState = State.HOME;
+        manualMode = true;
     }
     double prevSlidePower = 0.0;
     public void Loop(Gamepad gp2, Telemetry telemetry) {
-        double slidePower = -(gp2.left_trigger * 0.5 - gp2.right_trigger * 0.9);
+        double slidePower = -(gp2.left_trigger * 0.5 - gp2.right_trigger * 0.99);
 
-        if (slidePower != 0.0) {
-            slide.setPowers(slidePower);
-            prevSlidePower = slidePower;
-        }
-        else if (prevSlidePower != 0.0) {
-            slide.setPowers(0.0);
-            prevSlidePower = 0.0;
-        }
-        else{
-            boolean dpad_right_pressed = gp2.dpad_right;
-            if (!prevDpadRightPressed && dpad_right_pressed)
-            {
-                slide.setPosition(5,0.5);
-                closeGripperTimer.reset();
+            if (slidePower != 0.0) {
+                slide.setPowers(slidePower);
+                prevSlidePower = slidePower;
             }
-            prevDpadRightPressed = dpad_right_pressed;
-        }
+            else if (prevSlidePower != 0.0) {
+                slide.setPowers(0.0);
+                prevSlidePower = 0.0;
+            }
+
 
         if(slide.getPosition() > 1 && slidePower > 0){
             liftServo.setPosition(valori.DEPOZIT_HORIZONTAL);
@@ -61,17 +64,18 @@ public class Outake {
         if(gp2.y){
             liftServo.setPosition(DEPOSIT_SCORING);
         }
+        if(gp2.dpad_up)
+            slide.setPosition(4.2,0.5);
 
-        if(gp2.dpad_left) // deschide
-            specimenServo.setPosition(SPECIMEN_OPEN);
-
-        if(gp2.dpad_right){
-            // inchide
-//            target = 5;
+        if(gp2.dpad_right) {
             specimenServo.setPosition(SPECIMEN_CLOSED);
         }
+        if(gp2.dpad_left)
+            specimenServo.setPosition(SPECIMEN_OPEN);
 
-
+        if(gp2.left_trigger != 0 || gp2.right_trigger != 0) {
+            manualMode = true; currentState = State.HOME;
+        }
         slide.slideUpdate();
        // telemetry.addData("power",slide.getPower());
     }

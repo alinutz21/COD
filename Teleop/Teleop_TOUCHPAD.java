@@ -25,6 +25,7 @@ public class Teleop_TOUCHPAD extends LinearOpMode {
     public void runOpMode(){
         telemetry.addLine("RUBIX NR1");
         telemetry.update();
+        double loopTime = 0;
         outtake = new Outake();
         intake = new LazyIntake();
         drivetrain = new SmoothDrivetrain();
@@ -47,7 +48,10 @@ public class Teleop_TOUCHPAD extends LinearOpMode {
             outtake.Loop(gp2,telemetry);
             hang.Loop(gp1,telemetry);
             attention.Loop(gp1,gp2,telemetry);
-          //  telemetry.update();
+            double loop = System.nanoTime();
+            telemetry.addData("hz ", 1000000000 / (loop - loopTime));
+            loopTime = loop;
+            telemetry.update();
         }
     }
 }
