@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.COD.Autonomii.AutoComplex;
+package org.firstinspires.ftc.teamcode.COD.Auto;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.ParallelAction;
@@ -21,8 +21,8 @@ import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
 
 // PUNE IN BASKET 3
 @Config
-@Autonomous(name = "STANGA", group = "AutoSimplu")
-public class Vertical extends LinearOpMode {
+@Autonomous(name = "STANGA NATIONALA", group = "AutoSimplu")
+public class StangaNationala extends LinearOpMode {
 
     SlidePieseAutonomie slide;
     public Servo extensionServo;
@@ -86,13 +86,14 @@ public class Vertical extends LinearOpMode {
                                                 .strafeToSplineHeading(new Vector2d(-21,3),Math.toRadians(225))
                                                 .build(),
 
-                                        (p) -> {viteza_maxima = 0.8; return false;},
-                                        (p) -> {target = valori.LIFT_BASKET2; return false;}
+                                        (p) -> {viteza_maxima = 0.99; return false;},
+                                        (p) -> {target = valori.LIFT_BASKET2; return false;},
+                                        (p) -> {bendOverServo.setPosition(0.6); return false;}
 
                                 ),
 
                                 drive.actionBuilder(new Pose2d(-21,3,Math.toRadians(225)))
-                                        .waitSeconds(0.2)
+                                        .waitSeconds(0.1)
                                         .build(),
 
                                 (p) -> {liftServo.setPosition(valori.DEPOSIT_SCORING); return false;},
@@ -106,7 +107,7 @@ public class Vertical extends LinearOpMode {
 
                                         (p) -> {liftServo.setPosition(valori.DEPOSIT_IDLE); return false;},
                                         (p) -> {extensionServo.setPosition(valori.EXT_EXTENDED); return false;},
-                                        (p) -> {bendOverServo.setPosition(0.97); return false;},
+                                        (p) -> {bendOverServo.setPosition(valori.DMP_SCORING_SIDE); return false;},
                                         (p) -> {activeIntakeServo.setPower(1); return false;},
                                         (p) -> {viteza_maxima = 0.2; return false;},
                                         (p) -> {target = 0.5; return false;},
@@ -114,8 +115,9 @@ public class Vertical extends LinearOpMode {
                                         new SequentialAction(
 
                                                 drive.actionBuilder(new Pose2d(-21,3,Math.toRadians(225)))
-                                                        .strafeToSplineHeading(new Vector2d(-9,25),Math.toRadians(275))
-                                                        //.strafeTo(new Vector2d(-9,25))
+                                                        .strafeToSplineHeading(new Vector2d(-11,24),Math.toRadians(275))
+                                                        //.strafeToSplineHeading(new Vector2d(-13,5),Math.toRadians(275))
+                                                        //.splineToConstantHeading(new Vector2d(-10.5,25),Math.toRadians(90))
                                                         .waitSeconds(0.45)
                                                         .build(),
 
@@ -128,16 +130,16 @@ public class Vertical extends LinearOpMode {
 
                                 new SequentialAction(
 
-                                        drive.actionBuilder(new Pose2d(-9,25,Math.toRadians(275)))
-                                                .waitSeconds(0.6)
+                                        drive.actionBuilder(new Pose2d(-11,24,Math.toRadians(275)))
+                                                .waitSeconds(1.1)
                                                 .build(),
 
                                         new ParallelAction(
 
-                                                (p) -> {activeIntakeServo.setPower(-1); return false;},
+                                                (p) -> {activeIntakeServo.setPower(-0.9); return false;},
                                                 (p) -> {liftServo.setPosition(0.97); return false;},
 
-                                                drive.actionBuilder(new Pose2d(-9,25,Math.toRadians(275)))
+                                                drive.actionBuilder(new Pose2d(-11,25,Math.toRadians(275)))
                                                         .strafeToSplineHeading(new Vector2d(-20,6),Math.toRadians(225))
                                                         .build()
 
@@ -145,14 +147,15 @@ public class Vertical extends LinearOpMode {
 
                                 ),
 
-                                (p) -> {bendOverServo.setPosition(0.3); return false;},
+                                (p) -> {bendOverServo.setPosition(0.6); return false;},
+                                (p) -> {extensionServo.setPosition(valori.EXT_EXTENDED); return false;},
                                 (p) -> {activeIntakeServo.setPower(0); return false;},
                                 (p) -> {liftServo.setPosition(valori.DEPOZIT_HORIZONTAL); return false;},
-                                (p) -> {viteza_maxima = 0.8; return false;},
+                                (p) -> {viteza_maxima = 0.99; return false;},
                                 (p) -> {target = valori.LIFT_BASKET2; return false;},
 
                                 drive.actionBuilder(new Pose2d(-20,6,Math.toRadians(225)))
-                                        .waitSeconds(1.5)
+                                        .waitSeconds(1.3)
                                         .strafeTo(new Vector2d(-23,2.5))
                                         .build(),
 
@@ -173,8 +176,9 @@ public class Vertical extends LinearOpMode {
                                         (p) -> {activeIntakeServo.setPower(1); return false;},
 
                                         drive.actionBuilder(new Pose2d(-23,2.5,Math.toRadians(225)))
-                                                .strafeToSplineHeading(new Vector2d(-22,25),Math.toRadians(275))
-                                                //.strafeTo(new Vector2d(-22,25))
+                                                .strafeToSplineHeading(new Vector2d(-25,15),Math.toRadians(275))
+                                                .splineToConstantHeading(new Vector2d(-25,25),Math.toRadians(90))
+
                                                 .waitSeconds(0.8)
                                                 .build()
 
@@ -184,29 +188,31 @@ public class Vertical extends LinearOpMode {
 
                                         (p) -> {bendOverServo.setPosition(valori.DMP_INTAKE_SIDE); return false;},
                                         (p) -> {extensionServo.setPosition(valori.EXT_HOME); return false;},
+                                        (p) -> {liftServo.setPosition(0.97); return false;},
 
-                                        drive.actionBuilder(new Pose2d(-22,25,Math.toRadians(275)))
+                                        drive.actionBuilder(new Pose2d(-25,25,Math.toRadians(275)))
                                                 .waitSeconds(0.9)
                                                 .build(),
 
                                         new ParallelAction(
 
-                                                (p) -> {activeIntakeServo.setPower(-1); return false;},
+                                                (p) -> {activeIntakeServo.setPower(-0.5); return false;},
 
-                                                drive.actionBuilder(new Pose2d(-22,25,Math.toRadians(275)))
+                                                drive.actionBuilder(new Pose2d(-25,25,Math.toRadians(275)))
                                                         .waitSeconds(0.45)
                                                         .strafeToSplineHeading(new Vector2d(-18,6),Math.toRadians(225))
                                                         .build()
 
                                         ),
 
-                                        (p) -> {bendOverServo.setPosition(0.3);return false;},
+                                        (p) -> {bendOverServo.setPosition(0.6);return false;},
                                         (p) -> {activeIntakeServo.setPower(0); return false;}
 
                                 ),
 
                                 (p) -> {liftServo.setPosition(valori.DEPOZIT_HORIZONTAL); return false;},
-                                (p) -> {viteza_maxima = 0.8; return false;},
+                                (p) -> {extensionServo.setPosition(valori.EXT_EXTENDED); return false;},
+                                (p) -> {viteza_maxima = 0.99; return false;},
                                 (p) -> {target = valori.LIFT_BASKET2; return false;},
 
                                 drive.actionBuilder(new Pose2d(-18,6,Math.toRadians(225)))
@@ -230,10 +236,10 @@ public class Vertical extends LinearOpMode {
                                         (p) -> {activeIntakeServo.setPower(1); return false;},
 
                                         drive.actionBuilder(new Pose2d(-23,2,Math.toRadians(225)))
-                                                .strafeToSplineHeading(new Vector2d(-7,36),Math.toRadians(0))
-                                                .strafeTo(new Vector2d(-10.5,36),new TranslationalVelConstraint(20))
+                                                .strafeToSplineHeading(new Vector2d(-17.5,21),Math.toRadians(320))
+                                                //.strafeToSplineHeading(new Vector2d(-7,36),Math.toRadians(0))
+                                                //.strafeTo(new Vector2d(-12,36),new TranslationalVelConstraint(20))
                                                 .waitSeconds(1.1)
-
                                                 .build()
 
                                 ),
@@ -242,18 +248,20 @@ public class Vertical extends LinearOpMode {
 
                                         (p) -> {bendOverServo.setPosition(valori.DMP_INTAKE_SIDE); return false;},
                                         (p) -> {extensionServo.setPosition(valori.EXT_HOME); return false;},
+                                        (p) ->{liftServo.setPosition(0.97); return false;},
 
                                         new SequentialAction(
 
-                                                drive.actionBuilder(new Pose2d(-10.5,36,Math.toRadians(0)))
-                                                        .waitSeconds(0.2)
+                                                drive.actionBuilder(new Pose2d(-17.5,21,Math.toRadians(320)))
+                                                        .waitSeconds(0.8)
                                                         .build(),
 
-                                                (p) -> {activeIntakeServo.setPower(-1); return false;},
+                                                (p) -> {activeIntakeServo.setPower(-0.9); return false;},
 
-                                                drive.actionBuilder(new Pose2d(-10.5,36,Math.toRadians(330)))
+                                                drive.actionBuilder(new Pose2d(-17.5,21,Math.toRadians(320)))
                                                         .waitSeconds(0.3)
-                                                        .strafeToSplineHeading(new Vector2d(-20,6),Math.toRadians(216))
+                                                        .strafeTo(new Vector2d(-20,15))
+                                                        .strafeToSplineHeading(new Vector2d(-19,4),Math.toRadians(216))
                                                         .build()
 
                                         )
@@ -263,16 +271,17 @@ public class Vertical extends LinearOpMode {
                                 new ParallelAction(
 
                                         (p) -> {activeIntakeServo.setPower(0); return false;},
-                                        (p) -> {bendOverServo.setPosition(0.35); return false;},
+                                        (p) -> {bendOverServo.setPosition(0.6); return false;},
+                                        (p) -> {extensionServo.setPosition(valori.EXT_EXTENDED); return false;},
                                         (p) -> {activeIntakeServo.setPower(0); return false;},
                                         (p) -> {liftServo.setPosition(valori.DEPOZIT_HORIZONTAL); return false;},
-                                        (p) -> {viteza_maxima = 0.8; return false;},
+                                        (p) -> {viteza_maxima = 0.99; return false;},
                                         (p) -> {target = valori.LIFT_BASKET2; return false;},
 
                                         new SequentialAction(
 
-                                                drive.actionBuilder(new Pose2d(-20,6,Math.toRadians(216)))
-                                                        .waitSeconds(1.1)
+                                                drive.actionBuilder(new Pose2d(-19,4,Math.toRadians(216)))
+                                                        .waitSeconds(1.3)
                                                         .strafeTo(new Vector2d(-25,4))
                                                         .build()
 
@@ -284,11 +293,11 @@ public class Vertical extends LinearOpMode {
 
                                 drive.actionBuilder(new Pose2d(-25,4,Math.toRadians(216)))
                                         .waitSeconds(0.4)
-                                        .strafeTo(new Vector2d(-15,15),new TranslationalVelConstraint(30),new ProfileAccelConstraint(-10,30))
+                                        .strafeTo(new Vector2d(-18,8),new TranslationalVelConstraint(30),new ProfileAccelConstraint(-10,30))
                                         .build(),
 
                                 (p) -> {liftServo.setPosition(valori.DEPOSIT_IDLE); return false;},
-                                (p) -> {viteza_maxima = 0.8; return false;},
+                                (p) -> {viteza_maxima = 0.5; return false;},
                                 (p) -> {target = 0.5; return false;}
 
 

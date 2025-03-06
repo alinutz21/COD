@@ -15,12 +15,6 @@ public class SmoothDrivetrain {
     public MecanumDrive drive;
     public Pose2d pose;
 
-//    int toInt(boolean bool){
-//        if(bool)
-//            return 1;
-//        else return 0;
-//    }
-
     public void init(HardwareMap hardwareMap){
         pose = new Pose2d(0,0, Math.toRadians(0));
         drive = new MecanumDrive(hardwareMap,pose);
@@ -29,11 +23,10 @@ public class SmoothDrivetrain {
 
 
     public void Loop(Gamepad gp){
-
         drive.setDrivePowers(new PoseVelocity2d(
                 new Vector2d(
                         -0.48 * Math.tan(1.12 *-( gp.right_trigger - gp.left_trigger)),
-                        -0.48 * Math.tan(1.12 * gp.left_stick_x) // * 0.8
+                        -0.48 * Math.tan(1.12 * gp.left_stick_x)
                 ),
                 -gp.right_stick_x
         ));

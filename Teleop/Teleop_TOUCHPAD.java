@@ -44,7 +44,7 @@ public class Teleop_TOUCHPAD extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             drivetrain.Loop(gp1);
-            intake.Loop(gp2);
+            intake.Loop(gp2,telemetry);
             outtake.Loop(gp2,telemetry);
             hang.Loop(gp1,telemetry);
             attention.Loop(gp1,gp2,telemetry);

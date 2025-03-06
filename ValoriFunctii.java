@@ -8,12 +8,12 @@ public class ValoriFunctii {
     /*
      *   VALORILE PENTRU SERVO-UL CARE DEPOZITEAZA
      */
-    public final double EXT_HOME = 0.67; // pozitia lui normala
-    public final double EXT_EXTENDED = 0.985; // pozitia lui cand este extins
-    public final double DMP_INTAKE_SIDE = 0.06;
+    public final double EXT_HOME = 0.05; // pozitia lui normala
+    public final double EXT_EXTENDED = 0.5; // pozitia lui cand este extins
+    public final double DMP_INTAKE_SIDE = 0.03;
     public final double DMP_HORIZONTAL_SIDE = 0.8;
     public final double DMP_SCORING_SIDE = 0.965;
-    public final double DMP_90DEGREES = 0.35;
+    public final double DMP_90DEGREES = 0.3;
 
     // TIMPUL ALOCAT PENTRU CA SERVO-UL SA PUNA PIESA IN COS
     public final double RETURN_TIME = 1.5;

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.COD.RR;
 
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.DualNum;
 import com.acmerobotics.roadrunner.Time;
@@ -20,9 +21,9 @@ import org.firstinspires.ftc.teamcode.COD.RR.messages.ThreeDeadWheelInputsMessag
 @Config
 public final class ThreeDeadWheelLocalizer implements Localizer {
     public static class Params {
-        public double par0YTicks = 640.3199637459592; // y position of the first parallel encoder (in tick units)
-        public double par1YTicks = -841.7742100404982; // y position of the second parallel encoder (in tick units)
-        public double perpXTicks = -999.1164742470785; // x position of the perpendicular encoder (in tick units)
+        public double par0YTicks = 659.7040702264114; // y position of the first parallel encoder (in tick units)
+        public double par1YTicks = -808.1778024952889; // y position of the second parallel encoder (in tick units)
+        public double perpXTicks = -1031.6574241732867; // x position of the perpendicular encoder (in tick units)
     }
 
     public static Params PARAMS = new Params();
@@ -47,7 +48,6 @@ public final class ThreeDeadWheelLocalizer implements Localizer {
         par0.setDirection(DcMotorSimple.Direction.REVERSE);
         perp.setDirection(DcMotorSimple.Direction.REVERSE);
         this.inPerTick = inPerTick;
-       // perp.setDirection(DcMotorSimple.Direction.REVERSE);
 
         FlightRecorder.write("THREE_DEAD_WHEEL_PARAMS", PARAMS);
     }
