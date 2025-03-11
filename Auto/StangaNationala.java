@@ -100,7 +100,7 @@ public class StangaNationala extends LinearOpMode {
 
 
                                 drive.actionBuilder(new Pose2d(-21,3,Math.toRadians(225)))
-                                        .waitSeconds(1)
+                                        .waitSeconds(1.1)
                                         .build(),
 
                                 new ParallelAction(
@@ -117,7 +117,7 @@ public class StangaNationala extends LinearOpMode {
                                                 drive.actionBuilder(new Pose2d(-21,3,Math.toRadians(225)))
                                                         .strafeToSplineHeading(new Vector2d(-11,24),Math.toRadians(275))
                                                         //.strafeToSplineHeading(new Vector2d(-13,5),Math.toRadians(275))
-                                                        //.splineToConstantHeading(new Vector2d(-10.5,25),Math.toRadians(90))
+                                                        .splineToConstantHeading(new Vector2d(-11,27),Math.toRadians(90))
                                                         .waitSeconds(0.45)
                                                         .build(),
 
@@ -130,16 +130,16 @@ public class StangaNationala extends LinearOpMode {
 
                                 new SequentialAction(
 
-                                        drive.actionBuilder(new Pose2d(-11,24,Math.toRadians(275)))
+                                        drive.actionBuilder(new Pose2d(-11,27,Math.toRadians(275)))
                                                 .waitSeconds(1.1)
                                                 .build(),
 
                                         new ParallelAction(
 
-                                                (p) -> {activeIntakeServo.setPower(-0.9); return false;},
-                                                (p) -> {liftServo.setPosition(0.97); return false;},
+                                                (p) -> {activeIntakeServo.setPower(-0.4); return false;},
+                                                (p) -> {liftServo.setPosition(valori.DEPOSIT_IDLE); return false;},
 
-                                                drive.actionBuilder(new Pose2d(-11,25,Math.toRadians(275)))
+                                                drive.actionBuilder(new Pose2d(-11,27,Math.toRadians(275)))
                                                         .strafeToSplineHeading(new Vector2d(-20,6),Math.toRadians(225))
                                                         .build()
 
@@ -156,13 +156,13 @@ public class StangaNationala extends LinearOpMode {
 
                                 drive.actionBuilder(new Pose2d(-20,6,Math.toRadians(225)))
                                         .waitSeconds(1.3)
-                                        .strafeTo(new Vector2d(-23,2.5))
+                                        .strafeTo(new Vector2d(-24,2))
                                         .build(),
 
                                 (p) -> {activeIntakeServo.setPower(0); return false;},
                                 (p) -> {liftServo.setPosition(valori.DEPOSIT_SCORING); return false;},
 
-                                drive.actionBuilder(new Pose2d(-23,2.5,Math.toRadians(225)))
+                                drive.actionBuilder(new Pose2d(-24,2,Math.toRadians(225)))
                                         .waitSeconds(1.2)
                                         .build(),
 
@@ -175,11 +175,11 @@ public class StangaNationala extends LinearOpMode {
                                         (p) -> {bendOverServo.setPosition(valori.DMP_SCORING_SIDE); return false;},
                                         (p) -> {activeIntakeServo.setPower(1); return false;},
 
-                                        drive.actionBuilder(new Pose2d(-23,2.5,Math.toRadians(225)))
-                                                .strafeToSplineHeading(new Vector2d(-25,15),Math.toRadians(275))
-                                                .splineToConstantHeading(new Vector2d(-25,25),Math.toRadians(90))
+                                        drive.actionBuilder(new Pose2d(-24,2,Math.toRadians(225)))
+                                                .strafeToSplineHeading(new Vector2d(-23,15),Math.toRadians(275))
+                                                .splineToConstantHeading(new Vector2d(-23,25),Math.toRadians(90))
 
-                                                .waitSeconds(0.8)
+                                                .waitSeconds(0.4)
                                                 .build()
 
                                 ),
@@ -188,17 +188,17 @@ public class StangaNationala extends LinearOpMode {
 
                                         (p) -> {bendOverServo.setPosition(valori.DMP_INTAKE_SIDE); return false;},
                                         (p) -> {extensionServo.setPosition(valori.EXT_HOME); return false;},
-                                        (p) -> {liftServo.setPosition(0.97); return false;},
+                                        (p) -> {liftServo.setPosition(valori.DEPOSIT_IDLE); return false;},
 
-                                        drive.actionBuilder(new Pose2d(-25,25,Math.toRadians(275)))
+                                        drive.actionBuilder(new Pose2d(-23,25,Math.toRadians(275)))
                                                 .waitSeconds(0.9)
                                                 .build(),
 
                                         new ParallelAction(
 
-                                                (p) -> {activeIntakeServo.setPower(-0.5); return false;},
+                                                (p) -> {activeIntakeServo.setPower(-0.4); return false;},
 
-                                                drive.actionBuilder(new Pose2d(-25,25,Math.toRadians(275)))
+                                                drive.actionBuilder(new Pose2d(-23,25,Math.toRadians(275)))
                                                         .waitSeconds(0.45)
                                                         .strafeToSplineHeading(new Vector2d(-18,6),Math.toRadians(225))
                                                         .build()
@@ -248,7 +248,7 @@ public class StangaNationala extends LinearOpMode {
 
                                         (p) -> {bendOverServo.setPosition(valori.DMP_INTAKE_SIDE); return false;},
                                         (p) -> {extensionServo.setPosition(valori.EXT_HOME); return false;},
-                                        (p) ->{liftServo.setPosition(0.97); return false;},
+                                        (p) ->{liftServo.setPosition(valori.DEPOSIT_IDLE); return false;},
 
                                         new SequentialAction(
 
@@ -256,7 +256,7 @@ public class StangaNationala extends LinearOpMode {
                                                         .waitSeconds(0.8)
                                                         .build(),
 
-                                                (p) -> {activeIntakeServo.setPower(-0.9); return false;},
+                                                (p) -> {activeIntakeServo.setPower(-0.4); return false;},
 
                                                 drive.actionBuilder(new Pose2d(-17.5,21,Math.toRadians(320)))
                                                         .waitSeconds(0.3)
@@ -282,7 +282,7 @@ public class StangaNationala extends LinearOpMode {
 
                                                 drive.actionBuilder(new Pose2d(-19,4,Math.toRadians(216)))
                                                         .waitSeconds(1.3)
-                                                        .strafeTo(new Vector2d(-25,4))
+                                                        .strafeTo(new Vector2d(-25,2))
                                                         .build()
 
                                         )
@@ -291,8 +291,8 @@ public class StangaNationala extends LinearOpMode {
 
                                 (p) -> {liftServo.setPosition(valori.DEPOSIT_SCORING); return false;},
 
-                                drive.actionBuilder(new Pose2d(-25,4,Math.toRadians(216)))
-                                        .waitSeconds(0.4)
+                                drive.actionBuilder(new Pose2d(-25,2,Math.toRadians(216)))
+                                        .waitSeconds(0.55)
                                         .strafeTo(new Vector2d(-18,8),new TranslationalVelConstraint(30),new ProfileAccelConstraint(-10,30))
                                         .build(),
 

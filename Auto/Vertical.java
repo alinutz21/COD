@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -20,6 +21,8 @@ import org.firstinspires.ftc.teamcode.COD.Subsystems.SlidePieseAutonomie;
 import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
 
 // PUNE IN BASKET 3
+@Disabled
+
 @Config
 @Autonomous(name = "STANGA", group = "AutoSimplu")
 public class Vertical extends LinearOpMode {

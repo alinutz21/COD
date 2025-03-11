@@ -22,6 +22,7 @@ public class Outake {
     final double SPECIMEN_OPEN = valori.SPECIMEN_OPEN;
     final double SPECIMEN_CLOSED = valori.SPECIMEN_CLOSED;
     double prevSlidePower = 0.0;
+    boolean rand = true;
 
     public void init(HardwareMap hardwareMap){
         slide = new SlidePieseTeleop(hardwareMap,"LIFTMOTOR",true,false);
@@ -53,9 +54,24 @@ public class Outake {
         if(gp2.y){
             liftServo.setPosition(DEPOSIT_SCORING);
         }
-        if(gp2.dpad_up)
-            slide.setPosition(4.2,0.5);
+ //       if(gp2.right_stick_button)
+//        if(gp2.dpad_up) {
+//            if(slide.getPosition() > 20)
+//                slide.setPosition(4.2, 0.5);
+//            else slide.setPosition(45,0.9);
+//        }
 
+        if(gp2.dpad_up){
+            if(rand){
+                slide.setPosition(4.2, 0.5);
+                rand = !rand;
+            }
+            else{
+                slide.setPosition(45,0.9);
+                rand = !rand;
+
+            }
+        }
         if(gp2.dpad_right) {
             specimenServo.setPosition(SPECIMEN_CLOSED);
         }

@@ -1,12 +1,16 @@
 package org.firstinspires.ftc.teamcode.COD.Auto;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.AccelConstraint;
+import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -19,9 +23,12 @@ import org.firstinspires.ftc.teamcode.COD.RR.MecanumDrive;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.SlidePieseAutonomie;
 import org.firstinspires.ftc.teamcode.COD.ValoriFunctii;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 
 @Config
-@Autonomous(name = "DREAPTA 3_1 var de test", group = "AutoSimplu")
+@Autonomous(name = "DREAPTA NATIONALA", group = "AutoSimplu")
 
 public class DreaptaComplexAuto extends LinearOpMode {
 
@@ -89,6 +96,13 @@ public class DreaptaComplexAuto extends LinearOpMode {
         bendOverServo.setPosition(0.2);
         liftServo.setPosition(valori.DEPOSIT_IDLE);
 
+        VelConstraint baseVelConstraint = new MinVelConstraint(Arrays.asList(
+                new TranslationalVelConstraint(80.0),
+                new AngularVelConstraint(Math.PI / 2)
+        ));
+        AccelConstraint baseAccelConstraint = new ProfileAccelConstraint(-10.0, 80.0);
+   //     drive.defaultAccelConstraint = baseAccelConstraint;
+
         telemetry.addData("Mode", "running");
         telemetry.update();
         preluare.init();
@@ -103,7 +117,7 @@ public class DreaptaComplexAuto extends LinearOpMode {
                                         (p) -> {target = 45; return false;},
 
                                         drive.actionBuilder(new Pose2d(0,0,Math.toRadians(90)))
-                                                .splineToConstantHeading(new Vector2d(-6,34),Math.toRadians(90))
+                                                .splineToConstantHeading(new Vector2d(0,33.5),Math.toRadians(90))
                                                 .build()
 
                                 ),
@@ -111,43 +125,46 @@ public class DreaptaComplexAuto extends LinearOpMode {
 
                                 (p) -> {viteza_maxima = 0.8; return false;},
                                 (p) -> {target = 33; return false;},
+                                (p) -> {bendOverServo.setPosition(0.6); return false;},
+                                (p) -> {extensionServo.setPosition(valori.EXT_EXTENDED); return false;},
 
 
-                                drive.actionBuilder(new Pose2d(-6,34,Math.toRadians(90)))
-                                        .waitSeconds(0.15)
+                                drive.actionBuilder(new Pose2d(0,33.5,Math.toRadians(90)))
+                                        .waitSeconds(0.08)
                                         .build(),
 
                                 new ParallelAction(
 
                                         (p) -> {viteza_maxima = 0.4; return false;},
-                                        (p) -> {target = 5; return false;},
+                                        (p) -> {target = 4; return false;},
                                         (p) -> {specimenServo.setPosition(valori.SPECIMEN_OPEN); return false;},
                                         (p) -> {extensionServo.setPosition(valori.EXT_EXTENDED); return false;},
                                         (p) -> {bendOverServo.setPosition(valori.DMP_SCORING_SIDE); return false;},
                                         (p) -> {activeIntakeServo.setPower(1); return false;},
 
-                                        drive.actionBuilder(new Pose2d(-6,34,Math.toRadians(90)))
+                                        drive.actionBuilder(new Pose2d(0,33.5,Math.toRadians(90)))
                                                 .setReversed(true)
-                                                .splineToLinearHeading(new Pose2d(26,28,Math.toRadians(228)),Math.toRadians(0))
-                                                .waitSeconds(0.621)
+                                                .splineToLinearHeading(new Pose2d(21.5,30.5,Math.toRadians(216)),Math.toRadians(0))
+                                                .waitSeconds(0.12)
                                                 .build()
 
                                 ),
 
-                                (p) -> {bendOverServo.setPosition(0.6); return false;},
+                                (p) -> {bendOverServo.setPosition(0.8); return false;},
+                                (p) -> {activeIntakeServo.setPower(0.05); return false;},
 
-                                drive.actionBuilder(new Pose2d(26,28,Math.toRadians(228)))
+                                drive.actionBuilder(new Pose2d(21.5,30.5,Math.toRadians(216)))
                                         .strafeToSplineHeading(new Vector2d(25,16),Math.toRadians(125))
                                         .build(),
 
-                                (p) -> {bendOverServo.setPosition(0.9); return false;},
+                                (p) -> {bendOverServo.setPosition(0.85); return false;},
                                 (p) -> {activeIntakeServo.setPower(-1); return false;},
 
                                 drive.actionBuilder(new Pose2d(25,16,Math.toRadians(125)))
-                                        .waitSeconds(0.4)
+                                        .waitSeconds(0.6)
                                         .build(),
 
-                                (p) -> {bendOverServo.setPosition(0.6); return false;},
+                                //(p) -> {bendOverServo.setPosition(0.6); return false;},
 
 
                                 new ParallelAction(
@@ -156,16 +173,17 @@ public class DreaptaComplexAuto extends LinearOpMode {
                                         (p) -> {activeIntakeServo.setPower(1); return false;},
 
                                         drive.actionBuilder(new Pose2d(25,16,Math.toRadians(125)))
-                                                .strafeToSplineHeading(new Vector2d(40,15),Math.toRadians(247))
-                                                .strafeToSplineHeading(new Vector2d(40,34),Math.toRadians(247))
-                                                .waitSeconds(0.621)
+                                                .strafeToSplineHeading(new Vector2d(43,18),Math.toRadians(258))
+                                                .strafeToSplineHeading(new Vector2d(43,32),Math.toRadians(252))
+                                                .waitSeconds(0.07)
                                                 .build()
                                 ),
 
-                                (p) -> {bendOverServo.setPosition(0.6); return false;},
+                                (p) -> {bendOverServo.setPosition(0.8); return false;},
+                                (p) -> {activeIntakeServo.setPower(0.05); return false;},
                                 (p) -> {extensionServo.setPosition(valori.EXT_HOME); return false;},
 
-                                drive.actionBuilder(new Pose2d(40,34,Math.toRadians(247)))
+                                drive.actionBuilder(new Pose2d(43,32,Math.toRadians(258)))
                                         .strafeToSplineHeading(new Vector2d(30,14),Math.toRadians(125))
                                         .build(),
 
@@ -182,54 +200,52 @@ public class DreaptaComplexAuto extends LinearOpMode {
                                 (p) -> {activeIntakeServo.setPower(0); return false;},
 
 
-                                drive.actionBuilder(new Pose2d(30,16,Math.toRadians(125)))
-                                        .strafeToSplineHeading(new Vector2d(30,7),Math.toRadians(265))
-                                        .strafeTo(new Vector2d(30,1))
-                                        .waitSeconds(0.45)
+                                drive.actionBuilder(new Pose2d(30,14,Math.toRadians(125)))
+                                        .strafeToSplineHeading(new Vector2d(30,0),Math.toRadians(265))
+                                        //.strafeTo(new Vector2d(30,1))
+//                                        .waitSeconds(0.25)
                                         .build(),
 
                                 (p) -> {specimenServo.setPosition(valori.SPECIMEN_CLOSED); return false;},
 
-                                drive.actionBuilder(new Pose2d(30,1,Math.toRadians(265)))
-                                        .waitSeconds(0.1)
-                                        .build(),
+//                                drive.actionBuilder(new Pose2d(30,1,Math.toRadians(265)))
+//                                        .waitSeconds(0.1)
+//                                        .build(),
 
                                 new ParallelAction(
 
                                         (p) -> {viteza_maxima = 0.4; return false;},
                                         (p) -> {target = 45; return false;},
 
-                                        drive.actionBuilder(new Pose2d(30,1,Math.toRadians(265)))
-                                                .strafeToSplineHeading(new Vector2d(-5,38),Math.toRadians(95))
-                                                // .strafeTo(new Vector2d(-7,37))
-                                                .waitSeconds(0.1)
+                                        drive.actionBuilder(new Pose2d(30,0,Math.toRadians(265)))
+                                                .strafeToSplineHeading(new Vector2d(-9,36),Math.toRadians(90))
+                                                .splineToConstantHeading(new Vector2d(-9,39),Math.toRadians(90))
+                                                //.waitSeconds(0.1)
                                                 .build()
                                 ),
 
                                 (p) -> {viteza_maxima = 0.8; return false;},
                                 (p) -> {target = 33; return false;},
 
-                                drive.actionBuilder(new Pose2d(-5,38,Math.toRadians(95)))
+                                drive.actionBuilder(new Pose2d(-9,39,Math.toRadians(90)))
                                         .waitSeconds(0.1)
                                         .build(),
 
                                 new ParallelAction(
                                         (p) -> {specimenServo.setPosition(valori.SPECIMEN_OPEN); return false;},
-                                        (p) -> {viteza_maxima = 0.4; return false;},
-                                        (p) -> {target = 3; return false;},
+                                        (p) -> {viteza_maxima = 0.2; return false;},
+                                        (p) -> {target = 4; return false;},
 
-                                        drive.actionBuilder(new Pose2d(-5,38,Math.toRadians(95)))
-                                                .strafeToSplineHeading(new Vector2d(30,10),Math.toRadians(270))
-                                                .strafeTo(new Vector2d(30,0))
-                                                //.waitSeconds(0.1)
-                                                .build()
+                                        drive.actionBuilder(new Pose2d(-9,39,Math.toRadians(90)))
+                                                .strafeToSplineHeading(new Vector2d(30,0),Math.toRadians(270))
+                                                 .build()
                                 ),
 
                                 (p) -> {specimenServo.setPosition(valori.SPECIMEN_CLOSED); return false;},
 
-                                drive.actionBuilder(new Pose2d(30,0,Math.toRadians(270)))
-                                        .waitSeconds(0.1)
-                                        .build(),
+//                                drive.actionBuilder(new Pose2d(30,0,Math.toRadians(270)))
+//                                        .waitSeconds(0.1)
+//                                        .build(),
 
                                 new ParallelAction(
 
@@ -237,9 +253,9 @@ public class DreaptaComplexAuto extends LinearOpMode {
                                         (p) -> {target = 45; return false;},
 
                                         drive.actionBuilder(new Pose2d(30,0,Math.toRadians(270)))
-                                                .strafeToSplineHeading(new Vector2d(-1,38),Math.toRadians(90),null,new ProfileAccelConstraint(-40,60))
-                                                //.strafeTo(new Vector2d(-3,37))
-                                                .waitSeconds(0.1)
+                                                .strafeToSplineHeading(new Vector2d(-7,36),Math.toRadians(90),null,new ProfileAccelConstraint(-40,60))
+                                                .splineToConstantHeading(new Vector2d(-7,39),Math.toRadians(90))
+                                                //.waitSeconds(0.1)
                                                 .build()
 
                                 ),
@@ -247,24 +263,64 @@ public class DreaptaComplexAuto extends LinearOpMode {
                                 (p) -> {viteza_maxima = 0.8; return false;},
                                 (p) -> {target = 33; return false;},
 
-                                drive.actionBuilder(new Pose2d(-1,38,Math.toRadians(90)))
+                                drive.actionBuilder(new Pose2d(-7,39,Math.toRadians(90)))
                                         .waitSeconds(0.1)
                                         .build(),
 
                                 (p) -> {specimenServo.setPosition(valori.SPECIMEN_OPEN); return false;},
-                                (p) -> {viteza_maxima = 0.4; return false;},
-                                (p) -> {target = 1
-                                ; return false;},
+                                (p) -> {viteza_maxima = 0.2; return false;},
+                                (p) -> {target = 4; return false;},
 
-                                drive.actionBuilder(new Pose2d(-1,38,Math.toRadians(90)))
-                                        .strafeToSplineHeading(new Vector2d(30,0),Math.toRadians(270))
-                                        //.waitSeconds(0.1)
-                                        .build()
+                                drive.actionBuilder(new Pose2d(-7,39,Math.toRadians(90)))
+                                        .strafeToSplineHeading(new Vector2d(30,-0.5),Math.toRadians(270))
+                                        .waitSeconds(0.1)
+                                        .build(),
+
+                                (p) -> {specimenServo.setPosition(valori.SPECIMEN_CLOSED); return false;},
+
+//                                drive.actionBuilder(new Pose2d(30,0,Math.toRadians(270)))
+//                                        .waitSeconds(0.1)
+//                                        .build(),
+
+                                new ParallelAction(
+
+                                        (p) -> {viteza_maxima = 0.4; return false;},
+                                        (p) -> {target = 45; return false;},
+
+
+                                        drive.actionBuilder(new Pose2d(30,-0.5,Math.toRadians(270)))
+                                                .strafeToSplineHeading(new Vector2d(-5,30),Math.toRadians(85),null,new ProfileAccelConstraint(-60,100))
+                                                .splineToConstantHeading(new Vector2d(-5,41),Math.toRadians(90))
+                                                //.waitSeconds(0.1)
+                                                .build()
+
+                                ),
+
+                                (p) -> {viteza_maxima = 0.8; return false;},
+                                (p) -> {target = 33; return false;},
+                                (p) -> {extensionServo.setPosition(valori.EXT_EXTENDED); return false;},
+                                (p) -> {bendOverServo.setPosition(0.7); return false;},
+
+
+                                drive.actionBuilder(new Pose2d(-5,41,Math.toRadians(85)))
+                                        .waitSeconds(0.15)
+                                        .build(),
+
+                                new ParallelAction(
+
+                                        (p) -> {specimenServo.setPosition(valori.SPECIMEN_OPEN); return false;},
+                                        (p) -> {viteza_maxima = 0.7; return false;},
+                                        (p) -> {target = 0.1; return false;},
+
+                                        drive.actionBuilder(new Pose2d(-5,41,Math.toRadians(85)))
+                                                .strafeTo(new Vector2d(-5,30))
+                                                .build()
+                                )
 
 
 
 
-                        )
+                                )
                 ));
     }
 }

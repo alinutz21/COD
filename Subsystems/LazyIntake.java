@@ -31,7 +31,7 @@ public class LazyIntake {
         SAMPLE_STANDBY,
         SAMPLE_OUT,
         SCORING,
-        RETRACT,
+        THROWING,
         RETURNING
     }
     State currentState = State.HOME;
@@ -60,20 +60,8 @@ public class LazyIntake {
     public void SetState(State state) { currentState = state;}
     public void Loop(Gamepad gp, Telemetry telemetry){
 
-        if(gp.right_bumper){
-            if(saInvartit){
-                activeIntakeServo.setPower(1);
-                saInvartit = false;
-            }
-            else{
-                activeIntakeServo.setPower(-1);
-                saInvartit = true;
-            }
 
-        }
-        else{
-            manualMode = false;
-        }
+
 
         if(!manualMode) {
             switch (currentState) {
@@ -95,6 +83,10 @@ public class LazyIntake {
                         activeIntakeServo.setPower(1);
                         bendOverServo.setPosition(DMP_SCORING_SIDE);
                         currentState = State.INTAKE_SIDE;
+                    }
+                    if(gp.right_bumper)
+                    {
+                        activeIntakeServo.setPower(-1);
                     }
                     break;
                 case EXTENDING:
@@ -125,20 +117,33 @@ public class LazyIntake {
                         scoringTimer.reset();
                         currentState = State.SCORING;
                     }
+                    if(gp.right_bumper){
+                            bendOverServo.setPosition(DMP_HORIZONTAL);
+                            activeIntakeServo.setPower(-1); /// aici trebe -1
+                            //turningBackHomeTimer.reset();
+                            currentState = State.THROWING;
+                    }
+                    break;
+                case THROWING:
+                    if(gp.right_bumper){
+                        activeIntakeServo.setPower(1);
+                        bendOverServo.setPosition(DMP_SCORING_SIDE);
+                        currentState = State.INTAKE;
+                    }
                     break;
                 case SAMPLE_STANDBY:
                     if (returnHomeTimer.seconds() >= 1) { // 2.5
                         bendOverServo.setPosition(DMP_90DEGREES);
                         activeIntakeServo.setPower(0);
                         if (gp.b) {
-                            activeIntakeServo.setPower(-1);
+                            activeIntakeServo.setPower(valori.ACTIVE_INTAKE_BACK);
                             bendOverServo.setPosition(DMP_INTAKE_SIDE);
                             scoringTimer.reset();
                             currentState = State.SCORING;
                         }
                         if (gp.touchpad) {
                             bendOverServo.setPosition(DMP_SCORING_SIDE - 0.17);
-                            activeIntakeServo.setPower(-1);
+                            activeIntakeServo.setPower(-1); /// aici trebe -1
                             extensionServo.setPosition(EXT_EXTENDED);
                             turningBackHomeTimer.reset();
                             currentState = State.SAMPLE_OUT;
@@ -160,7 +165,7 @@ public class LazyIntake {
                         activeIntakeServo.setPower(0);
                     }
                     if (scoringTimer.seconds() >= 1) {
-                        activeIntakeServo.setPower(-1);
+                        activeIntakeServo.setPower(valori.ACTIVE_INTAKE_BACK); /// aici
                         returnHomeTimer.reset();
                         currentState = State.RETURNING;
                     }
@@ -186,7 +191,7 @@ public class LazyIntake {
         if (gp.touchpad && currentState != State.INTAKE && currentState != State.SAMPLE_STANDBY) {
             telemetry.addLine("caz particular");
             bendOverServo.setPosition(DMP_SCORING_SIDE - 0.17);
-            activeIntakeServo.setPower(-1);
+            activeIntakeServo.setPower(valori.ACTIVE_INTAKE_BACK);
             extensionServo.setPosition(EXT_EXTENDED);
             turningBackHomeTimer.reset();
             currentState = State.SAMPLE_OUT;
