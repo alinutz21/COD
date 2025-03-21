@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.COD.Subsystems;
 
+import android.view.CollapsibleActionView;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -47,7 +49,7 @@ public class LazyIntake {
     final double SAMPLE_OUT_TIME = valori.SAMPLE_OUT_TIME;
     private boolean firstTime = true;
     private boolean manualMode = false;
-    private boolean saInvartit = false;
+    private boolean apasat = false;
 
     public void init(HardwareMap hardwareMap){
         extensionServo = hardwareMap.get(Servo.class,"EXTENSIONSERVO");
@@ -59,9 +61,6 @@ public class LazyIntake {
 
     public void SetState(State state) { currentState = state;}
     public void Loop(Gamepad gp, Telemetry telemetry){
-
-
-
 
         if(!manualMode) {
             switch (currentState) {
@@ -83,10 +82,6 @@ public class LazyIntake {
                         activeIntakeServo.setPower(1);
                         bendOverServo.setPosition(DMP_SCORING_SIDE);
                         currentState = State.INTAKE_SIDE;
-                    }
-                    if(gp.right_bumper)
-                    {
-                        activeIntakeServo.setPower(-1);
                     }
                     break;
                 case EXTENDING:
@@ -118,14 +113,12 @@ public class LazyIntake {
                         currentState = State.SCORING;
                     }
                     if(gp.right_bumper){
-                            bendOverServo.setPosition(DMP_HORIZONTAL);
-                            activeIntakeServo.setPower(-1); /// aici trebe -1
-                            //turningBackHomeTimer.reset();
-                            currentState = State.THROWING;
+                        activeIntakeServo.setPower(-1); /// aici trebe -1
+                        currentState = State.THROWING;
                     }
                     break;
                 case THROWING:
-                    if(gp.right_bumper){
+                    if(gp.x) {
                         activeIntakeServo.setPower(1);
                         bendOverServo.setPosition(DMP_SCORING_SIDE);
                         currentState = State.INTAKE;
@@ -144,7 +137,7 @@ public class LazyIntake {
                         if (gp.touchpad) {
                             bendOverServo.setPosition(DMP_SCORING_SIDE - 0.17);
                             activeIntakeServo.setPower(-1); /// aici trebe -1
-                            extensionServo.setPosition(EXT_EXTENDED);
+                            //extensionServo.setPosition(EXT_EXTENDED);
                             turningBackHomeTimer.reset();
                             currentState = State.SAMPLE_OUT;
                         }
@@ -192,7 +185,7 @@ public class LazyIntake {
             telemetry.addLine("caz particular");
             bendOverServo.setPosition(DMP_SCORING_SIDE - 0.17);
             activeIntakeServo.setPower(valori.ACTIVE_INTAKE_BACK);
-            extensionServo.setPosition(EXT_EXTENDED);
+            //extensionServo.setPosition(EXT_EXTENDED);
             turningBackHomeTimer.reset();
             currentState = State.SAMPLE_OUT;
         }

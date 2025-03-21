@@ -14,11 +14,11 @@ import org.firstinspires.ftc.teamcode.COD.Subsystems.SmoothDrivetrain;
 public class Sasiu extends LinearOpMode {
     Gamepad gp1;
     SmoothDrivetrain drivetrain;
-
     @Override
     public void runOpMode(){
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        double loopTime = 0;
         drivetrain = new SmoothDrivetrain() ;
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         drivetrain.init(hardwareMap);
@@ -28,6 +28,10 @@ public class Sasiu extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             drivetrain.Loop(gp1);
+            double loop = System.nanoTime();
+            telemetry.addData("hz ", 1000000000 / (loop - loopTime));
+            loopTime = loop;
+            telemetry.update();
         }
     }
 }

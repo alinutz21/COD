@@ -35,14 +35,14 @@ public class Outake {
     public void Loop(Gamepad gp2, Telemetry telemetry) {
         double slidePower = -(gp2.left_trigger * 0.5 - gp2.right_trigger);
 
-            if (slidePower != 0.0) {
-                slide.setPowers(slidePower);
-                prevSlidePower = slidePower;
-            }
-            else if (prevSlidePower != 0.0) {
-                slide.setPowers(0.0);
-                prevSlidePower = 0.0;
-            }
+        if (slidePower != 0.0) {
+            slide.setPowers(slidePower);
+            prevSlidePower = slidePower;
+        }
+        else if (prevSlidePower != 0.0) {
+            slide.setPowers(0.0);
+            prevSlidePower = 0.0;
+        }
 
 
         if(slide.getPosition() > 1 && slidePower > 0){
@@ -51,26 +51,12 @@ public class Outake {
         if(slidePower < 0 && slide.getPosition() > 5){
             liftServo.setPosition(valori.DEPOSIT_IDLE);
         }
+
         if(gp2.y){
             liftServo.setPosition(DEPOSIT_SCORING);
         }
- //       if(gp2.right_stick_button)
-//        if(gp2.dpad_up) {
-//            if(slide.getPosition() > 20)
-//                slide.setPosition(4.2, 0.5);
-//            else slide.setPosition(45,0.9);
-//        }
-
-        if(gp2.dpad_up){
-            if(rand){
-                slide.setPosition(4.2, 0.5);
-                rand = !rand;
-            }
-            else{
-                slide.setPosition(45,0.9);
-                rand = !rand;
-
-            }
+        if(gp2.dpad_up) {
+            slide.setPosition(4.2, 0.5);
         }
         if(gp2.dpad_right) {
             specimenServo.setPosition(SPECIMEN_CLOSED);

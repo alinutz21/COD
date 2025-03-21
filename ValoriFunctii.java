@@ -8,9 +8,9 @@ public class ValoriFunctii {
     /*
      *   VALORILE PENTRU SERVO-UL CARE DEPOZITEAZA
      */
-    public final double EXT_HOME = 0.16; // pozitia lui normala
-    public final double EXT_EXTENDED = 0.45; // pozitia lui cand este extins
-    public final double DMP_INTAKE_SIDE = 0.01;
+    public final double EXT_HOME = 0; // pozitia lui normala
+    public final double EXT_EXTENDED = 0.30; // pozitia lui cand este extins
+    public final double DMP_INTAKE_SIDE = 0.02;
     public final double DMP_HORIZONTAL_SIDE = 0.8;
     public final double DMP_SCORING_SIDE = 0.92;
     public final double DMP_90DEGREES = 0.3;

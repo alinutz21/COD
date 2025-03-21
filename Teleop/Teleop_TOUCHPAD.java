@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.COD.Teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -12,7 +13,9 @@ import org.firstinspires.ftc.teamcode.COD.Subsystems.HangV2;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.LazyIntake;
 import org.firstinspires.ftc.teamcode.COD.Subsystems.Outake;
 
-@TeleOp(name="TELE OP Regionala", group="Linear OpMode")
+import java.util.List;
+
+@TeleOp(name="TELEOP NATIONALA", group="Linear OpMode")
 public class Teleop_TOUCHPAD extends LinearOpMode {
     Gamepad gp1,gp2;
     SmoothDrivetrain drivetrain;
@@ -39,6 +42,11 @@ public class Teleop_TOUCHPAD extends LinearOpMode {
         attention.init(hardwareMap);
         gp1 = gamepad1;
         gp2 = gamepad2;
+
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
 
         waitForStart();
 
